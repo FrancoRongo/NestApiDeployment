@@ -49,10 +49,61 @@ export class UsersRepository{
             password: "password5",
             address: "654 Birch Street",
             phone: "654-321-0987"
-          }
+          },
+          {
+            id: 6,
+            email: "user1@example.com",
+            name: "John Doe",
+            password: "password1",
+            address: "123 Main Street",
+            phone: "123-456-7890",
+            country: "United States",
+            city: "New York"
+          },
+          {
+            id: 7,
+            email: "user1@example.com",
+            name: "John Doe",
+            password: "password1",
+            address: "123 Main Street",
+            phone: "123-456-7890",
+            country: "United States",
+            city: "New York"
+          },
+          {
+            id: 8,
+            email: "user1@example.com",
+            name: "John Doe",
+            password: "password1",
+            address: "123 Main Street",
+            phone: "123-456-7890",
+            country: "United States",
+            city: "New York"
+          },
+          {
+            id: 9,
+            email: "user1@example.com",
+            name: "John Doe",
+            password: "password1",
+            address: "123 Main Street",
+            phone: "123-456-7890",
+            country: "United States",
+            city: "New York"
+          },
+          {
+            id: 10,
+            email: "user1@example.com",
+            name: "John Doe",
+            password: "password1",
+            address: "123 Main Street",
+            phone: "123-456-7890",
+            country: "United States",
+            city: "New York"
+          },
 
     ];
 
+  
     async getUsers(){
         return this.users
     }
@@ -72,6 +123,15 @@ export class UsersRepository{
     }
     this.users.splice(index, 1);
     return { message: `User with id ${id} deleted successfully` };
-}
+    }
+
+  async updateUsers(id:Number , user:any){
+    const index = this.users.findIndex((user) => user.id === id);
+    if (index === -1) {
+        throw new Error(`User with id ${id} not found`);
+    }
+    this.users[index] = {...this.users[index],...user}
+    return this.users[index];
+  }
 }
 

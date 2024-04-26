@@ -1,7 +1,11 @@
 import { Injectable } from "@nestjs/common";
+import { max, throwError } from "rxjs";
 
 @Injectable()
 export class ProductsRepository{
+    
+
+   
     private products = [
         {
             id: 1,
@@ -48,4 +52,26 @@ export class ProductsRepository{
     async getProducts(){
         return this.products
     }
+    async getById(id: number) {
+      return this.products.find((products)=>products.id === id)
+      
+    }
+    async createProducts(newProducts: any) {
+      const id = this.products.reduce((maxId, products) => (products.id > maxId ? products.id : maxId), 0) + 1;
+      const productsWithId = { id, ... newProducts};
+      this.products.push(productsWithId);
+      return productsWithId
+    }
+    async deteleProducts(id: number) {
+      const index = this.products.findIndex((user) => user.id === id);
+      if (index === -1){
+        throw new Error (`Products whith id ${id} not found`);
+      }
+      this.products.splice(index, 1);
+      return {message: `Products with id ${id} delete successfully`}
+      
+    }
+    
+
+        
 }

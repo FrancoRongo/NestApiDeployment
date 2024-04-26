@@ -1,7 +1,8 @@
-import { Controller, Get, HttpCode, Param, Post, Body, Put, Delete } from "@nestjs/common";
+import { Controller, Get, HttpCode, Param, Post, Body, Put, Delete, Query, UseGuards } from "@nestjs/common";
 import { UsersServices } from "./users.services";
 import { UsersRepository } from "./users.repository";
-import { userInfo } from "os";
+import { AuthGuard } from "src/auth/guard/AuthGuard";
+
 
 @Controller('users')
 export class UsersController {
@@ -9,8 +10,9 @@ export class UsersController {
 
     @HttpCode(200)
     @Get()
-    getUsers() {
-        return this.usersServices.getUsers(); //Retorna la ejecucion del servicio
+    //@UseGuards(AuthGuard)
+    getUsers(@Query('limit') limit:String, @Query('page') page:String)  {
+      return this.usersServices.getUsers(Number(limit),Number(page));
     }
 
     @HttpCode(200)
@@ -26,12 +28,15 @@ export class UsersController {
     }
     
     @HttpCode(200)
+    //@UseGuards(AuthGuard)
     @Put()
-        updateUser(){
+        updateUser(@Body()id:Number,User:UsersRepository){
+        return this.usersServices.updateUsers(id,User)
 
-        }
+    }
     
     @HttpCode(200)
+    @UseGuards(AuthGuard)
     @Delete(':id')
     deleteUser(@Param('id') id: string) {
         return this.usersServices.deleteUser(Number(id));

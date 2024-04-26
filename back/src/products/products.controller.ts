@@ -1,37 +1,40 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, HttpCode } from '@nestjs/common';
 import { ProductService } from './products.services';
+import { ProductsRepository } from './products.repository';
 
 
 @Controller('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
-  /*@Get()
-  async getProducts(): Promise<Product[]> {
-    return this.productService.getProducts();
-  }
+ @HttpCode(200)
+ @Get()
+ getProducts(){
+  return this.productService.getProducts();
+ }
 
-  @Get(':id')
-  async getProductById(@Param('id') id: string): Promise<Product> {
-    return this.productService.getProductById(id);
-  }
+ @HttpCode(200)
+ @Get(':id')
+ getProductsById(@Param('id')id:string){
+  return this.productService.getProductsById(Number(id));
+ }
 
-  @Post()
-  async createProduct(@Body() product: Product): Promise<{ id: string }> {
-    const createdProduct = await this.productService.createProduct(product);
-    return { id: createdProduct.id };
-  }
+ @HttpCode(201)
+ @Post()
+ createProduct(@Body()Products:ProductsRepository){
+  return this.productService.createProducts(Products);
+ }
 
-  @Put(':id')
-  async updateProduct(@Param('id') id: string, @Body() product: Product): Promise<{ id: string }> {
-    const updatedProduct = await this.productService.updateProduct(id, product);
-    return { id: updatedProduct.id };
-  }
+ @HttpCode(200)
+ @Put()
+ updateProducts(){
 
-  @Delete(':id')
-  async deleteProduct(@Param('id') id: string): Promise<{ id: string }> {
-    await this.productService.deleteProduct(id);
-    return { id };
-  }
-}*/
+ }
+ @HttpCode(200)
+ @Delete(':id')
+ deteleProducts (@Param('id') id:string){
+  return this.productService.deteleProducts(Number(id));
+ }
+
+  
 }

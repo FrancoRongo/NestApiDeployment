@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ProductsRepository } from './products.repository';
+import { identity } from 'rxjs';
 
 
 @Injectable()
 export class ProductService {
+  
  
   constructor (private productsRepository:ProductsRepository) {}
   async getProducts(){
@@ -11,22 +13,21 @@ export class ProductService {
     return dbProducts
 
   }
+  async getProductsById(id: number) {
+    const products = await this.productsRepository.getById(id);
+    if(!products){
+      throw new Error(`Products with id ${id} not found`)
+    }
+    return products;
+    
+  }
+  async createProducts (products:ProductsRepository){
+    return this.productsRepository.createProducts(products);
+  }
+  async deteleProducts(id: number) {
+    return this.productsRepository.deteleProducts(id);
+  }
   
-  /*getProductById(id: string): any {
-    throw new Error('Method not implemented.');
-  } 
-  updateProduct(id: string, product: Product) {
-    throw new Error('Method not implemented.');
-  }
-  createProduct(product: Product) {
-    throw new Error('Method not implemented.');
-  }
- deleteProduct(id: string) {
-    throw new Error('Method not implemented.');
-  }
-
-  
-}*/
 }
  
 
