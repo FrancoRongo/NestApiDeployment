@@ -1,23 +1,22 @@
-import { CanActivate, ExecutionContext,Injectable } from "@nestjs/common";
-import { Request} from "express";
-import { Observable } from "rxjs";
-
-function validate(request: Request){
-    if(!request.headers.authorization) return false
-    const authHeader = request.headers.authorization;
-    const auth = authHeader.split(' ')[1];
-    if(!auth) return false;
-
-    const [email, password] = auth.split(':');
-    if (!email || !password) return false;
-    return true;
-}
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 
 @Injectable()
-export class AuthGuard implements CanActivate{
-    canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
-        const request = context.switchToHttp().getRequest();
-        return validate(request)
-        
+export class AuthGuard implements CanActivate {
+  canActivate(context: ExecutionContext): boolean {
+    const request = context.switchToHttp().getRequest();
+    const authorizationHeader = request.headers.authorization;
+
+    // Verificar si existe el encabezado Authorization
+    if (!authorizationHeader) {
+      return false;
     }
+
+    // Verificar si el formato del encabezado Authorization es válido
+    let isValid: boolean = false;
+    if(authorizationHeader === "1234")
+    {
+        isValid = true;
+    }
+    return isValid;
+  }
 }

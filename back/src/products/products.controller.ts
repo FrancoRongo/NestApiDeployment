@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Param, Body, HttpCode } from '@nestjs/common';
+/*import { Controller, Get, Post, Put, Delete, Param, Body, HttpCode } from '@nestjs/common';
 import { ProductService } from './products.services';
 import { ProductsRepository } from './products.repository';
 
@@ -37,4 +37,4 @@ export class ProductController {
  }
 
   
-}
+}*/

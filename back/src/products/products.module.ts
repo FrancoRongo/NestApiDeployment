@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+/*import { Module } from "@nestjs/common";
 import { ProductController } from "./products.controller";
 import { ProductService } from "./products.services";
 import { ProductsRepository } from "./products.repository";
@@ -9,4 +9,4 @@ import { ProductsRepository } from "./products.repository";
 
 })
 
-export class ProductsModule {}
+export class ProductsModule {}*/

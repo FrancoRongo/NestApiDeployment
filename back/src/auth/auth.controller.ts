@@ -1,15 +1,18 @@
-// auth.controller.ts
-import { Controller,Get } from '@nestjs/common';
-import { AuthService } from './auth.services';
-import { get } from 'http';
-//import { LoginDto } from './dto/login.dto';
+/*import { Controller, Post, Body, BadRequestException } from "@nestjs/common";
+import { AuthService } from "./auth.services";
+import { UserDto } from "src/users/users.dto";
 
-@Controller('auth')
+@Controller("auth")
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
- @Get()
-  getAuth() {
-    return this.authService.getAuth();
-  }
- 
-}
+    constructor(private readonly authService: AuthService) {}
+
+    @Post("signin")
+    async signIn(@Body() signInDto: UserDto): Promise<{ token: string }> {
+        try {
+            const token = await this.authService.signIn(signInDto);
+            return { token };
+        } catch (error) {
+            throw new BadRequestException('Email o password incorrectos');
+        }
+    }
+}*/

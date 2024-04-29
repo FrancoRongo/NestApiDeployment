@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+/*import { Injectable } from '@nestjs/common';
 import { ProductsRepository } from './products.repository';
 import { identity } from 'rxjs';
 
@@ -28,6 +28,6 @@ export class ProductService {
     return this.productsRepository.deteleProducts(id);
   }
   
-}
+}*/
  
 

@@ -1,40 +1,53 @@
-import { Injectable, Inject, Param} from "@nestjs/common";
+/*import { Injectable, Inject, Param} from "@nestjs/common";
 import { UsersRepository } from "./users.repository";
+import { User } from "./users.interface";
+import { UserDto } from "./users.dto";
+import { promises } from "dns";
 
 @Injectable()
 export class UsersServices {
     constructor (private usersRepository:UsersRepository) {}
     
-    async getUsers(limit: number = 5, page: number = 1) {
-        const startIndex = (page - 1) * limit;
-        const endIndex = startIndex + limit;
+    async getUsers(page: number = 1, limit: number = 5): Promise<{ users: User[], totalPages: number, totalCount: number }> {
+        // Calcula el offset para la paginación
+        const offset = (page - 1) * limit;
 
-        const dbUsers = await this.usersRepository.getUsers();
+        // Obtiene los usuarios paginados del repositorio
+        const users = await this.usersRepository.getUsersPaginated(offset, limit);
 
-        return {
-            data: dbUsers.slice(startIndex, endIndex),
-            total: dbUsers.length,
-            page,
-            limit
-        };
-    } 
-    async getUsersById(id:number) {
-        const user = await this.usersRepository.getById(id);
-        if(!user) {
-            throw new Error(`User with id ${id} not found`)
-        }
-        const {password,...rest} = user;
-        return rest
-        
-    } 
-    createUser(user:UsersRepository){
-        return this.usersRepository.createUser(user);
+        // Obtiene el número total de usuarios desde el repositorio
+        const totalCount = await this.usersRepository.getTotalCount();
+
+        // Calcula el número total de páginas
+        const totalPages = Math.ceil(totalCount / limit);
+
+        return await { users, totalPages, totalCount };
     }
-    async deleteUser(id: number) {
+    
+   
+    
+    getUserByCountry(country:string): Promise<User[]>{
+        return this.usersRepository.getUserByCountry(country);
+    }
+    
+   /* getUserByName(name:string){
+        return this.usersRepository.getUserByName(name);
+    }*/
+    
+    
+    /* createUser(user:UserDto){
+      return this.usersRepository.createUser(user);
+    }
+    
+    deleteUser(id: number) {
         return this.usersRepository.deleteUser(id);
     }
 
-    updateUsers(id:Number , user:any){
-        return this.usersRepository.updateUsers(id,user);
-    }
-}
+    updateUsers(id:number , updateUserDto:Partial<User>): Promise<number>{
+        return this.usersRepository.updateUser(id,updateUserDto);
+    } 
+    
+    getUsersById(id:number) {
+        return this.usersRepository.getById(id);
+    } 
+}*/
