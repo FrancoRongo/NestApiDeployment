@@ -1,11 +1,12 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { LoggingGlobalMiddleware } from './middleware/logger.middleware';
+import { loggerGlobal } from './midldleware/logger.middelware';
+import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.use(LoggingGlobalMiddleware)
+  app.use(loggerGlobal)
+  app.useGlobalPipes(new ValidationPipe)
   await app.listen(3000);
-  console.log("Server Listening on PORT 3000")
 }
 bootstrap();

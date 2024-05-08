@@ -1,77 +1,114 @@
-/*import { Injectable } from "@nestjs/common";
-import { max, throwError } from "rxjs";
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Product } from "./products.entity";
+import { ProductDto } from "./products.dto";
+import * as data from "../utils/data.json";
+import { Category } from "src/categories/categories.entity";
+import { CategoriesServices } from "src/categories/categories.service";
 
 @Injectable()
-export class ProductsRepository{
-    
+export class ProductsRepository {
+    constructor(
+        @InjectRepository(Product)
+        private readonly productsRepository: Repository<Product>,
+        @InjectRepository(Category)
+        private categoriesRepository: Repository<Category>,
+        private readonly categoriesServices: CategoriesServices
+    ){}
 
-   
-    private products = [
-        {
-            id: 1,
-            name: "Laptop HP Pavilion",
-            description: "Powerful laptop with Intel Core i7 processor and 16GB RAM.",
-            price: 999.99,
-            stock: true,
-            imgUrl: "https://example.com/laptop1.jpg"
-          },
-          {
-            id: 2,
-            name: "Smartphone Samsung Galaxy",
-            description: "Latest smartphone with 6.5-inch display and 128GB storage.",
-            price: 799.99,
-            stock: true,
-            imgUrl: "https://example.com/smartphone1.jpg"
-          },
-          {
-            id: 3,
-            name: "Wireless Headphones",
-            description: "High-quality wireless headphones with noise-canceling technology.",
-            price: 149.99,
-            stock: false,
-            imgUrl: "https://example.com/headphones1.jpg"
-          },
-          {
-            id: 4,
-            name: "Smart Watch",
-            description: "Fitness tracker and smartwatch with heart rate monitor and GPS.",
-            price: 199.99,
-            stock: true,
-            imgUrl: "https://example.com/smartwatch1.jpg"
-          },
-          {
-            id: 5,
-            name: "4K Smart TV",
-            description: "65-inch 4K Ultra HD Smart TV with built-in streaming apps.",
-            price: 1499.99,
-            stock: true,
-            imgUrl: "https://example.com/tv1.jpg"
-          }
-    ];
+    async getProducts(): Promise<Product[]> {
+        return this.productsRepository.find({relations: ['category']});
+    }
 
-    async getProducts(){
-        return this.products
+    async getStockOfProduct(name: string): Promise<string>{
+        const product = await this.productsRepository.findOne({where:({name})});
+        if(!product) {
+            throw new Error ('Producto no encontrado');
+        }
+        return `Quedan ${product.stock} unidades de este producto: ${product.name} `;
     }
-    async getById(id: number) {
-      return this.products.find((products)=>products.id === id)
-      
-    }
-    async createProducts(newProducts: any) {
-      const id = this.products.reduce((maxId, products) => (products.id > maxId ? products.id : maxId), 0) + 1;
-      const productsWithId = { id, ... newProducts};
-      this.products.push(productsWithId);
-      return productsWithId
-    }
-    async deteleProducts(id: number) {
-      const index = this.products.findIndex((user) => user.id === id);
-      if (index === -1){
-        throw new Error (`Products whith id ${id} not found`);
-      }
-      this.products.splice(index, 1);
-      return {message: `Products with id ${id} delete successfully`}
-      
-    }
-    
 
-        
-}*/
+    async getProductById(id: string): Promise<Product> {
+        const product = await this.productsRepository.findOne({ where: { id } });
+        if (!product) { 
+            throw new Error('Producto no encontrado');
+        }
+        return product;
+    }
+
+    async createProduct(productDto: ProductDto): Promise<Product> {
+        let category = new Category();
+        category.name = productDto.category
+        const categoryProduct = await this.categoriesRepository.findOne({where:{name:category.name}});
+        if(!categoryProduct){
+            const newCategory = await this.categoriesServices.createCategory(category)
+            category= newCategory
+        } else {
+            category = categoryProduct
+        }
+        console.log(category)
+        let product = new Product()
+        product.name = productDto.name
+        product.description = productDto.description
+        product.price = productDto.price
+        product.stock = productDto.stock
+        product.imgUrl = productDto.imgUrl
+        product.category = category
+        console.log(product)
+        const newProduct = this.productsRepository.create(product);
+        return this.productsRepository.save(newProduct);
+    }
+
+    async updateProduct(id: string, productDto: Partial<Product>): Promise<Product> {
+        const product = await this.getProductById(id);
+        this.productsRepository.merge(product, productDto);
+        return this.productsRepository.save(product);
+    }
+
+    async deleteProduct(id: string): Promise<void> {
+        const product = await this.getProductById(id);
+        await this.productsRepository.remove(product);
+    }
+    //Agrega los productos hardcodeados en el data.json de la carpeta utils
+    async addHardProducts(){
+            
+        try {
+            const categories = await this.categoriesRepository.find();
+            await Promise.all(data?.map(async (element) => {
+                const category = categories.find(
+                    (category) => category.name === element.category,
+                  );
+                console.log(category)
+                if(category != null)
+                    {
+                        
+                    }
+                const product = new Product();
+                product.name= element.name;
+                product.description= element.description;
+                product.price=element.price
+                product.imgUrl=element.imgUrl;
+                product.stock= element.stock;
+                product.category= category
+
+                delete product.id;
+                console.log(product)
+                await this.productsRepository
+                
+                    .createQueryBuilder()
+                    .insert()
+                    .into(Product)
+                    .values(product)
+                    .orUpdate(['description','price','stock','imgUrl'],['name'])
+                    .execute();
+            }));
+            return 'Producto Agregado';
+        } catch (error) {
+            // Manejar el error aquí
+            console.error('Error al agregar categorías:', error);
+            throw error; // Puedes lanzar el error nuevamente si quieres que se maneje en otro lugar
+        }
+    }
+
+}
