@@ -22,7 +22,7 @@ export class UsersRepository {
     
     };
     //Trae todos los usuarios de dicho pais
-    async getUserByCountry(country: string): Promise<User[]>{
+    async getUsersByCountry(country: string): Promise<any[]>{
         return this.userRepository.find({where:{country}});
     }
     //Trae a los usuarios que estan entre el offset y el limit
@@ -37,9 +37,15 @@ export class UsersRepository {
         return this.userRepository.count();
     }
     //Crea un nuevo usuario usando un dto que no contiene el id
-    async createUser(userDto: CreateUserDto): Promise<User> {
+    async createUser(userDto: CreateUserDto, createdAt: string){
+        const users = await this.getUsers()
         const newUser: User = this.userRepository.create(userDto);
-        return this.userRepository.save(newUser);
+        if(users.length===0){
+            newUser.isAdmin = true
+        }
+        newUser.createdAt = createdAt;
+        this.userRepository.save(newUser);
+        return {newUser, createdAt}
     }
     //Actualiza un usuario (Recibe como parametro ID de usuario a modificar y el campo a modificar)
     async updateUser(id: string, updateUserDto: Partial<User>): Promise<User> {
@@ -59,4 +65,12 @@ export class UsersRepository {
         await this.userRepository.remove(user);
         return await user
     }
+
+    async getUserByEmail(email: string){
+        return this.userRepository.findOne({where:{email}});
+    }
+    async getUserByName(name:string){
+        return this.userRepository.findOne({where:{name}})
+    }
+
 }

@@ -1,40 +1,64 @@
-import { UseGuards, Controller, Get, Post, Body, Param, Put, Delete, HttpStatus, HttpCode, BadRequestException, NotFoundException, InternalServerErrorException, Query } from "@nestjs/common";
+import { UseGuards, Controller, Get,Req, Body, Param, Put, Delete, HttpStatus, HttpCode, BadRequestException, NotFoundException, InternalServerErrorException, Query } from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { User } from "./users.entity";
-import { CreateUserDto } from "./user.dto";
 import { AuthGuard } from "src/auth/auth.guard";
-import { UsersDbService } from "./usersDb.service";
+import { Role } from "src/auth/roles.enum";
+import { Roles } from "src/decorators/roles.decorator";
+import { RolesGuard } from "src/auth/roles.guard";
+import { ApiBearerAuth, ApiBody, ApiTags } from "@nestjs/swagger";
 
 @Controller("users")
+@ApiTags("Users")
 export class UsersController {
     constructor(private readonly usersService: UsersService,
-                private readonly usersDbService: UsersDbService
+                
     ) {}
-
+    @ApiBearerAuth()
+    @Get("admin")
+    @UseGuards(AuthGuard, RolesGuard)
+    @Roles(Role.Admin)
+    @HttpCode(HttpStatus.OK)
+    getAdmin(){
+        return "Ruta protegida"
+    }
+    @ApiBearerAuth()
     @Get()
     @UseGuards(AuthGuard)
-    async getUsers(@Query('page') page: number, @Query('limit') limit: number): Promise<{ users: User[], totalPages: number, totalCount: number }> {
+    @Roles(Role.Admin)
+    async getUsers(@Query('page') page: number, @Query('limit') limit: number): Promise<{ users: any[], totalPages: number, totalCount: number }> {
         try {
             return await this.usersService.getUsers(page, limit);
         } catch (error) {
             throw new InternalServerErrorException('Error interno al obtener usuarios');
         }
     }
-
-    @Get(':country')
+    @ApiBearerAuth()
+    @Get("profile")
     @UseGuards(AuthGuard)
-    async getUserByCountry(@Param('country') country: string): Promise<User[]> {
+    getUserProfile(@Req() request: Request & {user:any}){
+        return "Este enpoint retorne el perfil del usuario"
+    }
+    
+    @ApiBearerAuth()
+    @Get('/country/:country')
+    @UseGuards(AuthGuard)
+    async getUsersByCountry(@Param('country') country: string): Promise<any[]> {
         try {
             const countryName = country.replace(/-/g, ' ');
-            return await this.usersService.getUserByCountry(countryName);
+            const countryUsers = await this.usersService.getUsersByCountry(countryName);
+            if(countryUsers.length > 0){
+                return countryUsers
+            }else {
+                throw  new NotFoundException("No hay usuarios con esa nacionalidad")
+            }
         } catch (error) {
             throw new InternalServerErrorException('Error interno al obtener usuarios por país');
         }
     }
-
+    @ApiBearerAuth()
     @Get(':id')
     @UseGuards(AuthGuard)
-    async getUserById(@Param('id') id: string): Promise<User> {
+    async getUserById(@Param('id') id: string){
         try {
             const user = await this.usersService.getUserById(id);
             if (!user) {
@@ -43,54 +67,39 @@ export class UsersController {
             return user;
         } catch (error) {
             if (error instanceof NotFoundException) {
-                throw error; // Propagar NotFoundException sin modificar
+                throw error;
             } else {
                 throw new InternalServerErrorException('Error interno al obtener el usuario');
             }
         }
     }
-
-    @Post()
-    @HttpCode(HttpStatus.CREATED)
-    async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
-        try {
-            if (!createUserDto.name || !createUserDto.email || !createUserDto.password) {
-                throw new BadRequestException('Name, email, and password are required');
-            }
-            return await this.usersService.createUser(createUserDto);
-        } catch (error) {
-            if (error instanceof BadRequestException) {
-                throw error; // Propagar BadRequestException sin modificar
-            } else {
-                throw new InternalServerErrorException('Error interno al crear el usuario');
-            }
-        }
-    }
-
+    
+    @ApiBearerAuth()
     @Put(':id')
+    @ApiBody({})
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
-    async updateUser(@Param('id') id: string, @Body() updateUserDto: Partial<User>): Promise<User> {
+    async updateUser(@Param('id') id: string, @Body() updateUserDto: Partial<User>){
         try {
-            if (!updateUserDto.name && !updateUserDto.email && !updateUserDto.password && !updateUserDto.address) {
+            if (!updateUserDto.name && !updateUserDto.email && !updateUserDto.password && !updateUserDto.address && !updateUserDto.country && !updateUserDto.city && !updateUserDto.phone) {
                 throw new BadRequestException('At least one field to update must be provided');
             }
             return await this.usersService.updateUser(id, updateUserDto);
         } catch (error) {
             if (error instanceof BadRequestException) {
-                throw error; // Propagar BadRequestException sin modificar
+                throw error;
             } else {
                 throw new InternalServerErrorException('Error interno al actualizar el usuario');
             }
         }
     }
-
+    
+    @ApiBearerAuth()
     @Delete(':id')
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
     async deleteUser(@Param('id') id: string): Promise<User> {
         try {
-            console.log(id);
             const user = await this.usersService.deleteUser(id);
             if (!user) {
                 throw new NotFoundException(`Usuario con ID '${id}' no encontrado`);
@@ -98,7 +107,7 @@ export class UsersController {
             return user;
         } catch (error) {
             if (error instanceof NotFoundException) {
-                throw error; // Propagar NotFoundException sin modificar
+                throw error;
             } else {
                 throw new InternalServerErrorException('Error interno al eliminar el usuario');
             }

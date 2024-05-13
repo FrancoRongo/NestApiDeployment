@@ -3,8 +3,12 @@ import { ProductsService } from "./products.service";
 import { Product } from "./products.entity";
 import { ProductDto } from "./products.dto";
 import { AuthGuard } from "src/auth/auth.guard";
+import { Roles } from "src/decorators/roles.decorator";
+import { Role } from "src/auth/roles.enum";
+import { ApiBearerAuth, ApiBody, ApiTags } from "@nestjs/swagger";
 
 @Controller("products")
+@ApiTags("Products")
 export class ProductsController {
     constructor(private readonly productsService: ProductsService) {}
 
@@ -30,6 +34,7 @@ export class ProductsController {
 
     @Get('seeder')
     @HttpCode(HttpStatus.CREATED)
+    @Roles(Role.Admin)
     async getAddHardProduct(){
         try {
             return await this.productsService.addHardProduct();
@@ -55,10 +60,11 @@ export class ProductsController {
             }
         }
     }
-
+    @ApiBearerAuth()
     @Post()
     @UseGuards(AuthGuard) 
     @HttpCode(HttpStatus.CREATED)
+    @Roles(Role.Admin)
     async createProduct(@Body() productDto: ProductDto): Promise<Product> {
         try {
             if (!productDto.name || !productDto.description || !productDto.price || !productDto.stock || !productDto.imgUrl) {
@@ -73,9 +79,12 @@ export class ProductsController {
             }
         }
     }
-
+    
+    @ApiBearerAuth()
     @Put(':id')
+    @ApiBody({})
     @UseGuards(AuthGuard) 
+    @Roles(Role.Admin)
     @HttpCode(HttpStatus.OK)
     async updateProduct(@Param('id') id: string, @Body() productDto: Partial<Product>): Promise<Product> {
         try {
@@ -85,15 +94,16 @@ export class ProductsController {
             return await this.productsService.updateProduct(id, productDto);
         } catch (error) {
             if (error instanceof BadRequestException) {
-                throw error; // Propagar BadRequestException sin modificar
+                throw error;
             } else {
                 throw new InternalServerErrorException('Error interno al actualizar el producto');
             }
         }
     }
-
+    @ApiBearerAuth()
     @Delete(':id')
-    @UseGuards(AuthGuard) 
+    @UseGuards(AuthGuard)
+    @Roles(Role.Admin) 
     @HttpCode(HttpStatus.OK)
     async deleteProduct(@Param('id') id: string): Promise<void> {
         try {

@@ -1,15 +1,22 @@
-import { Controller, Post, Body, Param, Get, NotFoundException, InternalServerErrorException, Logger } from "@nestjs/common";
+import { Controller, Post, Body, Param, Get, NotFoundException, InternalServerErrorException, Logger, UseGuards } from "@nestjs/common";
 import { OrdersService } from "./orders.service"
 import { Order } from "./orders.entity";
 import { CreateOrderDto } from "./createOrderDto.Dto";
+import { AuthGuard } from "src/auth/auth.guard";
+import { Roles } from "src/decorators/roles.decorator";
+import { Role } from "src/auth/roles.enum";
+import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
+import { RolesGuard } from "src/auth/roles.guard";
 
 @Controller("orders")
+@ApiTags("Order")
 export class OrdersController {
     private readonly logger = new Logger(OrdersController.name);
 
     constructor(private readonly ordersService: OrdersService) {}
-
+    @ApiBearerAuth()
     @Post()
+    @UseGuards(AuthGuard)
     async createOrder(@Body() createOrderDto:CreateOrderDto): Promise<Order> {
         try {
             return await this.ordersService.addOrder(createOrderDto);
@@ -18,8 +25,10 @@ export class OrdersController {
             throw new InternalServerErrorException('Error interno al crear la orden');
         }
     }
-
+    @ApiBearerAuth()
+    @UseGuards(AuthGuard, RolesGuard)
     @Get()
+    @Roles(Role.Admin)
     async getOrders(): Promise<Order[]> {
         try {
             return await this.ordersService.getOrders();
@@ -28,8 +37,9 @@ export class OrdersController {
             throw new InternalServerErrorException('Error interno al obtener las órdenes');
         }
     }
-
+    @ApiBearerAuth()
     @Get(":id")
+    @UseGuards(AuthGuard)
     async getOrderById(@Param("id") id: string): Promise<Order> {
         try {
             const order = await this.ordersService.getOrder(id);
