@@ -22,13 +22,13 @@ let UsersService = class UsersService {
     }
     async getAdmin(page = 1, limit = 5) {
         const offset = (page - 1) * limit;
-        const users = await this.usersRepository.getUsersPaginated(offset, limit);
-        const usersWithoutPassword = [];
-        users.forEach(user => {
+        const allAdmins = await this.usersRepository.getAdmin();
+        const paginatedAdmins = allAdmins.slice(offset, offset + limit);
+        const usersWithoutPassword = paginatedAdmins.map(user => {
             const { password, ...userWithoutPassword } = user;
-            usersWithoutPassword.push(userWithoutPassword);
+            return userWithoutPassword;
         });
-        const totalCount = await this.usersRepository.getTotalCount();
+        const totalCount = allAdmins.length;
         const totalPages = Math.ceil(totalCount / limit);
         return { users: usersWithoutPassword, totalPages, totalCount };
     }

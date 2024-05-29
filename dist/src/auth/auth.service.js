@@ -48,14 +48,14 @@ let AuthService = class AuthService {
         if (!isPasswordValid) {
             throw new common_1.BadRequestException("Invalid Password");
         }
+        console.log(dbUser.isAdmin, dbUser.isSuperAdmin);
         const userPayload = {
             sub: dbUser.id,
             id: dbUser.id,
             email: dbUser.email,
             roles: [
-                dbUser.isAdmin ? roles_enum_1.Role.Admin : roles_enum_1.Role.User,
-                dbUser.isSuperAdmin ? roles_enum_1.Role.SuperAdmin : null
-            ].filter(role => role !== null)
+                dbUser.isSuperAdmin ? roles_enum_1.Role.SuperAdmin : (dbUser.isAdmin ? roles_enum_1.Role.Admin : roles_enum_1.Role.User)
+            ]
         };
         const token = this.jwtService.sign(userPayload);
         return { success: "User logged in successfully", token };

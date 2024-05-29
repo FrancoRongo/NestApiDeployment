@@ -3,7 +3,11 @@ import { User } from "./users.entity";
 export declare class UsersController {
     private readonly usersService;
     constructor(usersService: UsersService);
-    getAdmin(): void;
+    getAdmin(page?: number, limit?: number): Promise<{
+        users: any[];
+        totalPages: number;
+        totalCount: number;
+    }>;
     getUsers(page: number, limit: number): Promise<{
         users: any[];
         totalPages: number;
@@ -27,5 +31,5 @@ export declare class UsersController {
         createdAt: string;
         orders: import("../orders/orders.entity").Order[];
     }>;
-    deleteUser(id: string): Promise<User>;
+    deleteUser(id: string, req: any): Promise<User>;
 }

@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { User } from "./users.entity"; // Importa la entidad User
@@ -13,7 +13,7 @@ export class UsersRepository {
 
     //Trae todos los usuarios con rol de Admin
     async getAdmin(): Promise<User[]>{
-        return this.userRepository.find()
+        return this.userRepository.find({where:{isAdmin:true}})
     }
     
     //Trae todos los usuarios
@@ -48,7 +48,6 @@ export class UsersRepository {
         const users = await this.getUsers()
         const newUser: User = this.userRepository.create(userDto);
         if(users.length === 0){
-            newUser.isAdmin = true;
             newUser.isSuperAdmin = true;
         }
         newUser.createdAt = createdAt;
@@ -80,10 +79,10 @@ export class UsersRepository {
     async deleteUser(id: string): Promise<User> {
         const user = await this.userRepository.findOne({ where: { id } });
         if (!user) {
-            throw new Error('Usuario no encontrado');
+            throw new NotFoundException('Usuario no encontrado');
         }
         await this.userRepository.remove(user);
-        return await user
+        return user;
     }
 
     async getUserByEmail(email: string){

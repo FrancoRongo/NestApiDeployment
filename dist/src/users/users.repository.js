@@ -22,7 +22,7 @@ let UsersRepository = class UsersRepository {
         this.userRepository = userRepository;
     }
     async getAdmin() {
-        return this.userRepository.find();
+        return this.userRepository.find({ where: { isAdmin: true } });
     }
     async getUsers() {
         return this.userRepository.find();
@@ -50,7 +50,6 @@ let UsersRepository = class UsersRepository {
         const users = await this.getUsers();
         const newUser = this.userRepository.create(userDto);
         if (users.length === 0) {
-            newUser.isAdmin = true;
             newUser.isSuperAdmin = true;
         }
         newUser.createdAt = createdAt;
@@ -80,10 +79,10 @@ let UsersRepository = class UsersRepository {
     async deleteUser(id) {
         const user = await this.userRepository.findOne({ where: { id } });
         if (!user) {
-            throw new Error('Usuario no encontrado');
+            throw new common_1.NotFoundException('Usuario no encontrado');
         }
         await this.userRepository.remove(user);
-        return await user;
+        return user;
     }
     async getUserByEmail(email) {
         return this.userRepository.findOne({ where: { email } });

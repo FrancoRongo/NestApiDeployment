@@ -24,7 +24,13 @@ let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
     }
-    getAdmin() {
+    async getAdmin(page = 1, limit = 5) {
+        try {
+            return await this.usersService.getAdmin(page, limit);
+        }
+        catch (error) {
+            throw new common_1.InternalServerErrorException('Error interno al obtener usuarios admin');
+        }
     }
     async getUsers(page, limit) {
         try {
@@ -99,16 +105,27 @@ let UsersController = class UsersController {
             }
         }
     }
-    async deleteUser(id) {
+    async deleteUser(id, req) {
+        const currentUser = req.user;
         try {
-            const user = await this.usersService.deleteUser(id);
-            if (!user) {
+            const userToDelete = await this.usersService.getUserById(id);
+            if (!userToDelete) {
                 throw new common_1.NotFoundException(`Usuario con ID '${id}' no encontrado`);
             }
-            return user;
+            if (currentUser.roles[0] === roles_enum_1.Role.SuperAdmin) {
+                const deletedUser = await this.usersService.deleteUser(id);
+                return deletedUser;
+            }
+            else if (currentUser.roles[0] === roles_enum_1.Role.Admin && !userToDelete.isAdmin && !userToDelete.isSuperAdmin) {
+                const deletedUser = await this.usersService.deleteUser(id);
+                return deletedUser;
+            }
+            else {
+                throw new common_1.UnauthorizedException(`No tienes permiso para eliminar este usuario, ya que tu rol no tiene los permisos para eliminar a este usuario: ${userToDelete.name}`);
+            }
         }
         catch (error) {
-            if (error instanceof common_1.NotFoundException) {
+            if (error instanceof common_1.HttpException) {
                 throw error;
             }
             else {
@@ -124,15 +141,17 @@ __decorate([
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(roles_enum_1.Role.SuperAdmin),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    __param(0, (0, common_1.Query)('page')),
+    __param(1, (0, common_1.Query)('limit')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", void 0)
+    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getAdmin", null);
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Get)(),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
-    (0, roles_decorator_1.Roles)(roles_enum_1.Role.Admin),
+    (0, roles_decorator_1.Roles)(roles_enum_1.Role.Admin, roles_enum_1.Role.SuperAdmin),
     __param(0, (0, common_1.Query)('page')),
     __param(1, (0, common_1.Query)('limit')),
     __metadata("design:type", Function),
@@ -142,7 +161,8 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Get)("profile"),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(roles_enum_1.Role.Admin),
     __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -151,7 +171,8 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Get)('/country/:country'),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(roles_enum_1.Role.Admin),
     __param(0, (0, common_1.Param)('country')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -160,7 +181,8 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Get)(':id'),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(roles_enum_1.Role.Admin),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -183,7 +205,8 @@ __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Put)(':id'),
     (0, swagger_1.ApiBody)({}),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(roles_enum_1.Role.Admin),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
@@ -194,12 +217,13 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Delete)(':id'),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
-    (0, roles_decorator_1.Roles)(roles_enum_1.Role.SuperAdmin),
+    (0, swagger_1.ApiBody)({}),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "deleteUser", null);
 exports.UsersController = UsersController = __decorate([

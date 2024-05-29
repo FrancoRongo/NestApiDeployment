@@ -20,6 +20,7 @@ const auth_guard_1 = require("../auth/auth.guard");
 const roles_decorator_1 = require("../decorators/roles.decorator");
 const roles_enum_1 = require("../auth/roles.enum");
 const swagger_1 = require("@nestjs/swagger");
+const roles_guard_1 = require("../auth/roles.guard");
 let ProductsController = class ProductsController {
     constructor(productsService) {
         this.productsService = productsService;
@@ -165,8 +166,8 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Delete)(':id'),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
-    (0, roles_decorator_1.Roles)(roles_enum_1.Role.Admin),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(roles_enum_1.Role.SuperAdmin),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),

@@ -12,7 +12,7 @@ export class UsersService {
         return {newUser, createdAt};
     }
 
-    async getAdmin(page:number = 1, limit: number = 5): Promise<{users:any[], totalPages: number, totalCount:number}>{
+    /*async getAdmin(page:number = 1, limit: number = 5): Promise<{users:any[], totalPages: number, totalCount:number}>{
         const offset = (page - 1) *limit;
         const users = await this.usersRepository.getUsersPaginated(offset, limit);
         const usersWithoutPassword:any[] = [];
@@ -24,7 +24,26 @@ export class UsersService {
         const totalCount = await this.usersRepository.getTotalCount();
         const totalPages = Math.ceil(totalCount/limit);
         return {users:usersWithoutPassword, totalPages, totalCount};
+    }*/
+
+    
+
+    async getAdmin(page: number = 1, limit: number = 5): Promise<{ users: any[], totalPages: number, totalCount: number }> {
+    const offset = (page - 1) * limit;
+    const allAdmins = await this.usersRepository.getAdmin();
+    const paginatedAdmins = allAdmins.slice(offset, offset + limit);
+
+    const usersWithoutPassword: any[] = paginatedAdmins.map(user => {
+        const { password, ...userWithoutPassword } = user;
+        return userWithoutPassword;
+    });
+
+    const totalCount = allAdmins.length;
+    const totalPages = Math.ceil(totalCount / limit);
+
+    return { users: usersWithoutPassword, totalPages, totalCount };
     }
+ 
 
     async getUsers(page: number = 1, limit: number = 5): Promise<{ users: any[], totalPages: number, totalCount: number }> {
         // Calcula el offset para la paginación
