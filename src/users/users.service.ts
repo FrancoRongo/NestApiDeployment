@@ -10,23 +10,7 @@ export class UsersService {
     async createUser(createUserDto: CreateUserDto, createdAt:string) {
         const newUser = await this.usersRepository.createUser(createUserDto, createdAt);
         return {newUser, createdAt};
-    }
-
-    /*async getAdmin(page:number = 1, limit: number = 5): Promise<{users:any[], totalPages: number, totalCount:number}>{
-        const offset = (page - 1) *limit;
-        const users = await this.usersRepository.getUsersPaginated(offset, limit);
-        const usersWithoutPassword:any[] = [];
-        users.forEach(user => {
-            const { password, ...userWithoutPassword } = user; 
-            usersWithoutPassword.push(userWithoutPassword); 
-        });
-    
-        const totalCount = await this.usersRepository.getTotalCount();
-        const totalPages = Math.ceil(totalCount/limit);
-        return {users:usersWithoutPassword, totalPages, totalCount};
-    }*/
-
-    
+    }    
 
     async getAdmin(page: number = 1, limit: number = 5): Promise<{ users: any[], totalPages: number, totalCount: number }> {
     const offset = (page - 1) * limit;

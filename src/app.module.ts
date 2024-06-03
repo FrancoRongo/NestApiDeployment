@@ -7,12 +7,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeOrmConfig from "./config/typeorm"
 import { OrderModule } from './orders/orders.module';
-import { ProductsService } from './products/products.service';
-import { UsersService } from './users/users.service';
-import { OrdersService } from './orders/orders.service';
 import { CategoriesModule } from './categories/categories.module';
 import { FileUploadModule } from './file_upload/file_upload.module';
 import { JwtModule } from '@nestjs/jwt';
+import { SupplierModule } from './supplier/supplier.module';
 
 @Module({
   imports: [
@@ -31,7 +29,7 @@ import { JwtModule } from '@nestjs/jwt';
       signOptions:{expiresIn:"1h"},
       secret:process.env.JWT_SECRET
     })
-    ,UsersModule, TodosModule, ProductsModule, AuthModule, OrderModule, CategoriesModule, FileUploadModule],
+    ,UsersModule, TodosModule, ProductsModule, AuthModule, OrderModule, CategoriesModule, FileUploadModule,SupplierModule],
   controllers: [],
   providers: [],
 })

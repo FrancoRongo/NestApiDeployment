@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty, IsString, IsNumber } from "class-validator";
+import { IsNotEmpty, IsString, IsNumber, IsOptional, isNumber } from "class-validator";
 
 export class ProductDto {
     @IsNotEmpty()
@@ -49,6 +49,14 @@ export class ProductDto {
         example: "Ropa",
     })
     readonly category: string;
+
+    @IsOptional()
+    @IsString()
+    readonly supplier:string
+
+    @IsOptional()
+    @IsNumber()
+    readonly supplierPrice:number 
 
     constructor(partial: Partial<ProductDto>) {
         Object.assign(this, partial);

@@ -5,5 +5,7 @@ export declare class ProductDto {
     readonly stock: number;
     readonly imgUrl: string;
     readonly category: string;
+    readonly supplier: string;
+    readonly supplierPrice: number;
     constructor(partial: Partial<ProductDto>);
 }

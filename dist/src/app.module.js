@@ -19,6 +19,7 @@ const orders_module_1 = require("./orders/orders.module");
 const categories_module_1 = require("./categories/categories.module");
 const file_upload_module_1 = require("./file_upload/file_upload.module");
 const jwt_1 = require("@nestjs/jwt");
+const supplier_module_1 = require("./supplier/supplier.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -38,7 +39,7 @@ exports.AppModule = AppModule = __decorate([
                 signOptions: { expiresIn: "1h" },
                 secret: process.env.JWT_SECRET
             }),
-            users_module_1.UsersModule, todos_module_1.TodosModule, products_module_1.ProductsModule, auth_module_1.AuthModule, orders_module_1.OrderModule, categories_module_1.CategoriesModule, file_upload_module_1.FileUploadModule
+            users_module_1.UsersModule, todos_module_1.TodosModule, products_module_1.ProductsModule, auth_module_1.AuthModule, orders_module_1.OrderModule, categories_module_1.CategoriesModule, file_upload_module_1.FileUploadModule, supplier_module_1.SupplierModule
         ],
         controllers: [],
         providers: [],

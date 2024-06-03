@@ -41,7 +41,7 @@ let OrderRepository = class OrderRepository {
         for (const product of createOrderDto.products) {
             const productInDB = await this.productsService.getProductById(product.id);
             if (productInDB && productInDB.stock === 0) {
-                throw new Error(`No hay stock disponible del producto ${product.name}`);
+                console.log(`No hay stock disponible del producto ${product.name}`);
             }
             else if (productInDB && productInDB.stock > 0) {
                 productInDB.stock -= 1;

@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColum
 import { Category } from "src/categories/categories.entity";
 import { OrderDetails } from "src/orders/orderDetails.entity";
 import { ApiProperty } from "@nestjs/swagger";
+import { Supplier } from "src/supplier/supplier.entity";
 
 // Transformador personalizado para la columna de precio
 export class ColumnNumericTransformer {
@@ -81,4 +82,17 @@ export class Product {
     })
     @OneToMany(() => OrderDetails, orderDetails => orderDetails.products)
     orderDetails: OrderDetails[];
+    
+    @ManyToOne(()=> Supplier, supplier => supplier.products)
+    @JoinColumn({name:"supplier_id"})
+    supplier:Supplier
+
+    @Column({
+        type:"decimal",
+        precision:10,
+        scale:2,
+        nullable:true,
+        transformer: new ColumnNumericTransformer()
+    })
+    supplierPrice:number
 }

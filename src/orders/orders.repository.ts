@@ -3,7 +3,6 @@ import { Order } from './orders.entity';
 import { Injectable, InternalServerErrorException} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { OrderDetails } from 'src/orders/orderDetails.entity';
-import { Product } from '../products/products.entity';
 import { ProductsService } from '../products/products.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateOrderDto } from './createOrderDto.Dto';
@@ -19,7 +18,7 @@ export class OrderRepository {
         private readonly orderDetailRepository: Repository<OrderDetails>
     ) {}
 
-    async addOrder(createOrderDto: CreateOrderDto): Promise<Order> {
+    async addOrder(createOrderDto: CreateOrderDto/*aca pasar el userid */): Promise<Order> {
     // Buscar al usuario por su ID
     const user = await this.usersService.getUserById(createOrderDto.userId);
     if (!user) {
@@ -42,7 +41,7 @@ export class OrderRepository {
         // Buscar el producto por su ID en la base de datos
         const productInDB = await this.productsService.getProductById(product.id);
         if (productInDB && productInDB.stock === 0){
-            throw new Error (`No hay stock disponible del producto ${product.name}`)
+            console.log(`No hay stock disponible del producto ${product.name}`)
 
         } else if (productInDB && productInDB.stock > 0) {
             // Restar una unidad del stock del producto utilizando el servicio de productos

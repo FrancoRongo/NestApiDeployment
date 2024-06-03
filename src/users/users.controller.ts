@@ -128,33 +128,10 @@ export class UsersController {
         }
     }
     
- /* @ApiBearerAuth()
-    @Delete(':id')
-    @UseGuards(AuthGuard, RolesGuard)
-    @Roles(Role.Admin)
-    @HttpCode(HttpStatus.OK)
-    async deleteUser(@Param('id') id: string): Promise<User> {
-        try {
-            const user = await this.usersService.deleteUser(id);
-            if (!user) {
-                throw new NotFoundException(`Usuario con ID '${id}' no encontrado`);
-            }
-            return user;
-        } catch (error) {
-            if (error instanceof NotFoundException) {
-                throw error;
-            } else {
-                throw new InternalServerErrorException('Error interno al eliminar el usuario');
-            }
-        }
-    }*/
-
-
     @ApiBearerAuth()
     @Delete(':id')
     @ApiBody({})
     @UseGuards(AuthGuard)
-    //@Roles(Role.SuperAdmin)
     @HttpCode(HttpStatus.OK)
     
     async deleteUser(@Param('id') id: string, @Req() req): Promise<User> {

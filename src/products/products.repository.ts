@@ -57,7 +57,7 @@ export class ProductsRepository {
         product.stock = productDto.stock
         product.imgUrl = productDto.imgUrl
         product.category = category
-
+        
         const newProduct = this.productsRepository.create(product);
         return this.productsRepository.save(newProduct);
     }

@@ -14,6 +14,7 @@ const typeorm_1 = require("typeorm");
 const categories_entity_1 = require("../categories/categories.entity");
 const orderDetails_entity_1 = require("../orders/orderDetails.entity");
 const swagger_1 = require("@nestjs/swagger");
+const supplier_entity_1 = require("../supplier/supplier.entity");
 class ColumnNumericTransformer {
     to(data) {
         return data;
@@ -101,6 +102,21 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => orderDetails_entity_1.OrderDetails, orderDetails => orderDetails.products),
     __metadata("design:type", Array)
 ], Product.prototype, "orderDetails", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => supplier_entity_1.Supplier, supplier => supplier.products),
+    (0, typeorm_1.JoinColumn)({ name: "supplier_id" }),
+    __metadata("design:type", supplier_entity_1.Supplier)
+], Product.prototype, "supplier", void 0);
+__decorate([
+    (0, typeorm_1.Column)({
+        type: "decimal",
+        precision: 10,
+        scale: 2,
+        nullable: true,
+        transformer: new ColumnNumericTransformer()
+    }),
+    __metadata("design:type", Number)
+], Product.prototype, "supplierPrice", void 0);
 exports.Product = Product = __decorate([
     (0, typeorm_1.Entity)({ name: 'products' })
 ], Product);
