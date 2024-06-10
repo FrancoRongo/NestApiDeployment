@@ -22,6 +22,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ./back/Dockerfile
+          file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/nest-api:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/nestapideployment:latest
