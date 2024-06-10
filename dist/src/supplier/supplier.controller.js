@@ -25,7 +25,7 @@ let SupplierController = class SupplierController {
             return this.supplierServices.getSuppliers();
         }
         catch (error) {
-            throw new common_1.InternalServerErrorException('Error interno del servidor');
+            throw new common_1.InternalServerErrorException('Error interno del servidor al buscar proveedores');
         }
     }
     async getSupplierId(id) {
@@ -33,7 +33,7 @@ let SupplierController = class SupplierController {
             return await this.supplierServices.getSupplierId(id);
         }
         catch (error) {
-            throw new common_1.InternalServerErrorException('Error interno del servidor');
+            throw new common_1.InternalServerErrorException('Error interno del servidor al buscar un proveedor por id');
         }
     }
     async createSupplier(supplierDto) {
@@ -41,7 +41,7 @@ let SupplierController = class SupplierController {
             return await this.supplierServices.createSupplier(supplierDto);
         }
         catch (error) {
-            throw new common_1.InternalServerErrorException('Error interno del servidor');
+            throw new common_1.InternalServerErrorException('Error interno del servidor al crear el proveedor');
         }
     }
     async updateSupplier(id, supplierDto) {
@@ -49,7 +49,7 @@ let SupplierController = class SupplierController {
             return await this.supplierServices.updateSupplier(id, supplierDto);
         }
         catch (error) {
-            throw new common_1.InternalServerErrorException('Error interno del servidor');
+            throw new common_1.InternalServerErrorException('Error interno del servidor al modificar el proveedor');
         }
     }
     async deleteSupplier(id) {
@@ -57,18 +57,20 @@ let SupplierController = class SupplierController {
             return await this.supplierServices.deteleSupplier(id);
         }
         catch (error) {
-            throw new common_1.InternalServerErrorException('Error interno del servidor');
+            throw new common_1.InternalServerErrorException('Error interno del servidor al borrar un proveedor');
         }
     }
 };
 exports.SupplierController = SupplierController;
 __decorate([
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], SupplierController.prototype, "getSuppliers", null);
 __decorate([
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
@@ -76,6 +78,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], SupplierController.prototype, "getSupplierId", null);
 __decorate([
+    (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -83,6 +86,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], SupplierController.prototype, "createSupplier", null);
 __decorate([
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, common_1.Put)(":id"),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
@@ -91,6 +95,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], SupplierController.prototype, "updateSupplier", null);
 __decorate([
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, common_1.Delete)(":id"),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),

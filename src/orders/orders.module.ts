@@ -14,6 +14,9 @@ import { Product } from "src/products/products.entity";
 import { CategoriesRepository } from "src/categories/categories.repository";
 import { Category } from "src/categories/categories.entity";
 import { CategoriesServices } from "src/categories/categories.service";
+import { Supplier } from "src/supplier/supplier.entity";
+import { SupplierRepository } from "src/supplier/supplier.repository";
+import { SupplierServices } from "src/supplier/supplier.services";
 
 @Module({
     imports: [
@@ -21,7 +24,8 @@ import { CategoriesServices } from "src/categories/categories.service";
         TypeOrmModule.forFeature([User]),
         TypeOrmModule.forFeature([Product]),
         TypeOrmModule.forFeature([Order]),
-        TypeOrmModule.forFeature([Category])
+        TypeOrmModule.forFeature([Category]),
+        TypeOrmModule.forFeature([Supplier])
                 ],
     providers: [
         OrderRepository,
@@ -32,7 +36,10 @@ import { CategoriesServices } from "src/categories/categories.service";
         ProductsRepository,
         OrdersService,
         CategoriesRepository,
-        CategoriesServices
+        CategoriesServices,
+        SupplierRepository,
+        SupplierServices
+        
     ],
     controllers: [OrdersController]
 })

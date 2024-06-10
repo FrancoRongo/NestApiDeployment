@@ -23,6 +23,9 @@ const products_entity_1 = require("../products/products.entity");
 const categories_repository_1 = require("../categories/categories.repository");
 const categories_entity_1 = require("../categories/categories.entity");
 const categories_service_1 = require("../categories/categories.service");
+const supplier_entity_1 = require("../supplier/supplier.entity");
+const supplier_repository_1 = require("../supplier/supplier.repository");
+const supplier_services_1 = require("../supplier/supplier.services");
 let OrderModule = class OrderModule {
 };
 exports.OrderModule = OrderModule;
@@ -33,7 +36,8 @@ exports.OrderModule = OrderModule = __decorate([
             typeorm_1.TypeOrmModule.forFeature([users_entity_1.User]),
             typeorm_1.TypeOrmModule.forFeature([products_entity_1.Product]),
             typeorm_1.TypeOrmModule.forFeature([orders_entity_1.Order]),
-            typeorm_1.TypeOrmModule.forFeature([categories_entity_1.Category])
+            typeorm_1.TypeOrmModule.forFeature([categories_entity_1.Category]),
+            typeorm_1.TypeOrmModule.forFeature([supplier_entity_1.Supplier])
         ],
         providers: [
             orders_repository_1.OrderRepository,
@@ -44,7 +48,9 @@ exports.OrderModule = OrderModule = __decorate([
             products_repository_1.ProductsRepository,
             orders_service_1.OrdersService,
             categories_repository_1.CategoriesRepository,
-            categories_service_1.CategoriesServices
+            categories_service_1.CategoriesServices,
+            supplier_repository_1.SupplierRepository,
+            supplier_services_1.SupplierServices
         ],
         controllers: [orders_controller_1.OrdersController]
     })

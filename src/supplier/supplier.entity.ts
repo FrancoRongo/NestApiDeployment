@@ -5,13 +5,13 @@ import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "t
 export class Supplier{
     @PrimaryGeneratedColumn('uuid')
     id:string
-    @Column()
+    @Column({nullable:true})
     name:string
-    @Column()
+    @Column({nullable:true})
     phone:string
-    @Column()
+    @Column({nullable:true})
     email:string
-    @Column()
+    @Column({nullable:true})
     address:string
     @OneToMany(()=>Product, product => product.supplier)
     @JoinColumn()

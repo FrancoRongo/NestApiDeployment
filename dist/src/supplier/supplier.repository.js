@@ -18,13 +18,19 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const supplier_entity_1 = require("./supplier.entity");
 let SupplierRepository = class SupplierRepository {
+    findOne() {
+        throw new Error("Method not implemented.");
+    }
     constructor(supplierRepository) {
         this.supplierRepository = supplierRepository;
     }
     async getSuppliers() {
-        return this.supplierRepository.find();
+        return this.supplierRepository.find({ relations: ['products'] });
     }
     async getSupplierById(id) {
+        if (!id) {
+            throw new common_1.BadRequestException('Se espera un id como respuesta');
+        }
         return this.supplierRepository.findOne({ where: { id } });
     }
     async createSupplier(supplierDto) {
@@ -32,22 +38,27 @@ let SupplierRepository = class SupplierRepository {
         if (!newSupplier) {
             throw new common_1.BadRequestException;
         }
-        this.supplierRepository.save(newSupplier);
-        return newSupplier;
+        return this.supplierRepository.save(newSupplier);
     }
     async updateSupplier(id, updateSupplierDto) {
+        if (!id) {
+            throw new common_1.BadRequestException('Se espear un id como respuesta');
+        }
         const supplier = await this.supplierRepository.findOne({ where: { id } });
         if (!supplier) {
-            throw new Error(`El provedor con ${id} no fue encontrado`);
+            throw new Error(`No se encuentra el proveedor con el siguiente id:${id}`);
         }
         Object.assign(supplier, updateSupplierDto);
         await this.supplierRepository.save(supplier);
         return supplier;
     }
     async deleteSupplier(id) {
+        if (!id) {
+            throw new common_1.BadRequestException('Se espera un id como respuesta');
+        }
         const supplier = await this.supplierRepository.findOne({ where: { id } });
         if (!supplier) {
-            throw new Error(`El Provedor con id ${id} no fue encontrado`);
+            throw new Error(`No se encuentra el proveedor con el siguiente id:${id}`);
         }
         await this.supplierRepository.remove(supplier);
         return supplier;

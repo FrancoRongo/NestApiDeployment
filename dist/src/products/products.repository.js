@@ -18,16 +18,22 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const products_entity_1 = require("./products.entity");
 const data = require("../utils/data.json");
+const dataSupplier = require("../utils/dataSupplier.json");
 const categories_entity_1 = require("../categories/categories.entity");
 const categories_service_1 = require("../categories/categories.service");
+const supplier_entity_1 = require("../supplier/supplier.entity");
+const supplier_dto_1 = require("../supplier/supplier.dto");
+const supplier_services_1 = require("../supplier/supplier.services");
 let ProductsRepository = class ProductsRepository {
-    constructor(productsRepository, categoriesRepository, categoriesServices) {
+    constructor(productsRepository, categoriesRepository, categoriesServices, supplierRepository, supplierService) {
         this.productsRepository = productsRepository;
         this.categoriesRepository = categoriesRepository;
         this.categoriesServices = categoriesServices;
+        this.supplierRepository = supplierRepository;
+        this.supplierService = supplierService;
     }
     async getProducts() {
-        return this.productsRepository.find({ relations: ['category'] });
+        return this.productsRepository.find({ relations: ['category', 'supplier'] });
     }
     async getStockOfProduct(name) {
         const product = await this.productsRepository.findOne({ where: ({ name }) });
@@ -54,6 +60,14 @@ let ProductsRepository = class ProductsRepository {
         else {
             category = categoryProduct;
         }
+        let supplier;
+        if (productDto.supplier) {
+            supplier = await this.supplierRepository.findOne({ where: { name: productDto.supplier } });
+            if (!supplier) {
+                const supplierDto = new supplier_dto_1.SupplierDto({ name: productDto.supplier });
+                supplier = await this.supplierService.createSupplier(supplierDto);
+            }
+        }
         let product = new products_entity_1.Product();
         product.name = productDto.name;
         product.description = productDto.description;
@@ -61,6 +75,8 @@ let ProductsRepository = class ProductsRepository {
         product.stock = productDto.stock;
         product.imgUrl = productDto.imgUrl;
         product.category = category;
+        product.supplier = supplier;
+        product.supplierPrice = productDto.supplierPrice;
         const newProduct = this.productsRepository.create(product);
         return this.productsRepository.save(newProduct);
     }
@@ -75,10 +91,35 @@ let ProductsRepository = class ProductsRepository {
     }
     async addHardProducts() {
         try {
-            const categories = await this.categoriesRepository.find();
+            await Promise.all(dataSupplier?.map(async (element) => {
+                let supplier = new supplier_entity_1.Supplier();
+                supplier.name = element.name;
+                supplier.email = element.email;
+                supplier.address = element.address;
+                supplier.phone = element.phone;
+                const supplierDb = await this.supplierRepository.findOne({ where: { name: supplier.name } });
+                if (!supplierDb) {
+                    const newSupplier = await this.supplierService.createSupplier(supplier);
+                }
+            }));
             await Promise.all(data?.map(async (element) => {
-                const category = categories.find((category) => category.name === element.category);
-                if (category != null) {
+                let category = new categories_entity_1.Category();
+                category.name = element.category;
+                const categoryProduct = await this.categoriesRepository.findOne({ where: { name: category.name } });
+                if (!categoryProduct) {
+                    const newCategory = await this.categoriesServices.createCategory(category);
+                    category = newCategory;
+                }
+                else {
+                    category = categoryProduct;
+                }
+                let supplier;
+                if (element.supplier) {
+                    supplier = await this.supplierRepository.findOne({ where: { name: element.supplier } });
+                    if (!supplier) {
+                        const supplierDto = new supplier_dto_1.SupplierDto({ name: element.supplier });
+                        supplier = await this.supplierService.createSupplier(supplierDto);
+                    }
                 }
                 const product = new products_entity_1.Product();
                 product.name = element.name;
@@ -87,6 +128,8 @@ let ProductsRepository = class ProductsRepository {
                 product.imgUrl = element.imgUrl;
                 product.stock = element.stock;
                 product.category = category;
+                product.supplier = supplier;
+                product.supplierPrice = element.supplierPrice;
                 delete product.id;
                 await this.productsRepository
                     .createQueryBuilder()
@@ -103,14 +146,19 @@ let ProductsRepository = class ProductsRepository {
             throw error;
         }
     }
+    async addSupplierToProducts() {
+    }
 };
 exports.ProductsRepository = ProductsRepository;
 exports.ProductsRepository = ProductsRepository = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, typeorm_1.InjectRepository)(products_entity_1.Product)),
     __param(1, (0, typeorm_1.InjectRepository)(categories_entity_1.Category)),
+    __param(3, (0, typeorm_1.InjectRepository)(supplier_entity_1.Supplier)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
         typeorm_2.Repository,
-        categories_service_1.CategoriesServices])
+        categories_service_1.CategoriesServices,
+        typeorm_2.Repository,
+        supplier_services_1.SupplierServices])
 ], ProductsRepository);
 //# sourceMappingURL=products.repository.js.map

@@ -29,7 +29,7 @@ import { SupplierModule } from './supplier/supplier.module';
       signOptions:{expiresIn:"1h"},
       secret:process.env.JWT_SECRET
     })
-    ,UsersModule, TodosModule, ProductsModule, AuthModule, OrderModule, CategoriesModule, FileUploadModule,SupplierModule],
+    ,UsersModule, TodosModule, ProductsModule, AuthModule, OrderModule, CategoriesModule, FileUploadModule, SupplierModule],
   controllers: [],
   providers: [],
 })

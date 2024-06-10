@@ -3,6 +3,7 @@ import { Supplier } from "./supplier.entity";
 import { SupplierDto } from "./supplier.dto";
 export declare class SupplierRepository {
     private readonly supplierRepository;
+    findOne(): Supplier | PromiseLike<Supplier>;
     constructor(supplierRepository: Repository<Supplier>);
     getSuppliers(): Promise<Supplier[]>;
     getSupplierById(id: string): Promise<Supplier>;

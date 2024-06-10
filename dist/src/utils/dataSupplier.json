@@ -1,0 +1,26 @@
+[
+    {
+        "name": "Supplier A",
+        "email": "contact@supplierA.com",
+        "address": "123 Supplier St, Supplier City, SP",
+        "phone": "123-456-7890"
+    },
+    {
+        "name": "Supplier B",
+        "email": "contact@supplierB.com",
+        "address": "456 Supplier Ave, Supplier Town, ST",
+        "phone": "234-567-8901"
+    },
+    {
+        "name": "Supplier C",
+        "email": "contact@supplierC.com",
+        "address": "789 Supplier Blvd, Supplier Village, SV",
+        "phone": "345-678-9012"
+    },
+    {
+        "name": "Supplier D",
+        "email": "contact@supplierD.com",
+        "address": "321 Supplier Rd, Supplier Hamlet, SH",
+        "phone": "456-789-0123"
+    }
+]

@@ -25,6 +25,7 @@ export class OrdersController {
             throw new InternalServerErrorException('Error interno al crear la orden');
         }
     }
+    
     @ApiBearerAuth()
     @UseGuards(AuthGuard,RolesGuard)
     @Get()
@@ -37,6 +38,7 @@ export class OrdersController {
             throw new InternalServerErrorException('Error interno al obtener las órdenes');
         }
     }
+
     @ApiBearerAuth()
     @Get(":id")
     @UseGuards(AuthGuard, RolesGuard)

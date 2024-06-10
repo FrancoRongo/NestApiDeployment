@@ -16,15 +16,19 @@ const products_entity_1 = require("./products.entity");
 const categories_entity_1 = require("../categories/categories.entity");
 const categories_repository_1 = require("../categories/categories.repository");
 const categories_service_1 = require("../categories/categories.service");
+const supplier_repository_1 = require("../supplier/supplier.repository");
+const supplier_services_1 = require("../supplier/supplier.services");
+const supplier_entity_1 = require("../supplier/supplier.entity");
 let ProductsModule = class ProductsModule {
 };
 exports.ProductsModule = ProductsModule;
 exports.ProductsModule = ProductsModule = __decorate([
     (0, common_1.Module)({
         imports: [typeorm_1.TypeOrmModule.forFeature([products_entity_1.Product]),
-            typeorm_1.TypeOrmModule.forFeature([categories_entity_1.Category])
+            typeorm_1.TypeOrmModule.forFeature([categories_entity_1.Category]),
+            typeorm_1.TypeOrmModule.forFeature([supplier_entity_1.Supplier])
         ],
-        providers: [products_service_1.ProductsService, products_repository_1.ProductsRepository, categories_repository_1.CategoriesRepository, categories_service_1.CategoriesServices],
+        providers: [products_service_1.ProductsService, products_repository_1.ProductsRepository, categories_repository_1.CategoriesRepository, categories_service_1.CategoriesServices, supplier_repository_1.SupplierRepository, supplier_services_1.SupplierServices],
         controllers: [products_controller_1.ProductsController]
     })
 ], ProductsModule);
