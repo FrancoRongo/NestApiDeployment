@@ -1,6 +1,6 @@
 FROM node:18
 WORKDIR /app
-COPY back/package*.json ./
+COPY package*.json ./
 RUN npm install
 COPY . .
 EXPOSE 3000
