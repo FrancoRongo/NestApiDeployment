@@ -142,7 +142,7 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Post)(),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
     (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
     (0, roles_decorator_1.Roles)(roles_enum_1.Role.Admin),
     __param(0, (0, common_1.Body)()),
@@ -154,7 +154,7 @@ __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Put)(':id'),
     (0, swagger_1.ApiBody)({}),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(roles_enum_1.Role.Admin),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     __param(0, (0, common_1.Param)('id')),

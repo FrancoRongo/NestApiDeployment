@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SupplierDto = void 0;
+const swagger_1 = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 class SupplierDto {
     constructor(partial) {
@@ -18,15 +19,23 @@ class SupplierDto {
 }
 exports.SupplierDto = SupplierDto;
 __decorate([
-    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.Length)(3, 80),
+    (0, swagger_1.ApiProperty)({
+        description: "El nombre del proveedor debe tener como minimo 3 caracteres",
+        example: "Supplier A"
+    }),
     __metadata("design:type", String)
 ], SupplierDto.prototype, "name", void 0);
 __decorate([
-    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNotEmpty)(),
     (0, class_validator_1.IsEmail)(),
     (0, class_validator_1.IsString)(),
+    (0, swagger_1.ApiProperty)({
+        description: "El email del proveedor debe tener como minimo 3 caracteres",
+        example: "proveedor@example.com"
+    }),
     __metadata("design:type", String)
 ], SupplierDto.prototype, "email", void 0);
 __decorate([

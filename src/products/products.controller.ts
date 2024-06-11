@@ -63,7 +63,7 @@ export class ProductsController {
     }
     @ApiBearerAuth()
     @Post()
-    @UseGuards(AuthGuard) 
+    @UseGuards(AuthGuard, RolesGuard) 
     @HttpCode(HttpStatus.CREATED)
     @Roles(Role.Admin)
     async createProduct(@Body() productDto: ProductDto): Promise<Product> {
@@ -83,7 +83,7 @@ export class ProductsController {
     @ApiBearerAuth()
     @Put(':id')
     @ApiBody({})
-    @UseGuards(AuthGuard) 
+    @UseGuards(AuthGuard, RolesGuard) 
     @Roles(Role.Admin)
     @HttpCode(HttpStatus.OK)
     async updateProduct(@Param('id') id: string, @Body() productDto: Partial<Product>): Promise<Product> {

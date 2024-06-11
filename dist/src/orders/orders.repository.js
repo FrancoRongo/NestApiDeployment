@@ -38,10 +38,11 @@ let OrderRepository = class OrderRepository {
         const orderDetails = new orderDetails_entity_1.OrderDetails();
         orderDetails.price = 0;
         orderDetails.products = [];
+        let productStockNull = [];
         for (const product of createOrderDto.products) {
             const productInDB = await this.productsService.getProductById(product.id);
             if (productInDB && productInDB.stock === 0) {
-                console.log(`No hay stock disponible del producto ${product.name}`);
+                productStockNull.push(productInDB);
             }
             else if (productInDB && productInDB.stock > 0) {
                 productInDB.stock -= 1;
@@ -53,7 +54,11 @@ let OrderRepository = class OrderRepository {
         const savedOrderDetails = await this.orderDetailRepository.save(orderDetails);
         order.orderDetails = savedOrderDetails;
         const savedOrder = await this.orderRepository.save(order);
-        return savedOrder;
+        const productStockNullMessage = {
+            message: "Estos productos se encuentran sin stock",
+            products: productStockNull
+        };
+        return [savedOrder, productStockNullMessage];
     }
     async getOrders() {
         const orders = await this.orderRepository.find({
@@ -65,8 +70,37 @@ let OrderRepository = class OrderRepository {
         const order = await this.orderRepository.findOne({
             where: { id: id },
             relations: ['user', 'orderDetails'],
+            select: {
+                id: true,
+                date: true,
+                user: {
+                    id: true,
+                    name: true,
+                    email: true,
+                    password: false,
+                    phone: true,
+                    country: true,
+                    address: true,
+                    city: true,
+                    isAdmin: true,
+                    isSuperAdmin: true,
+                    createdAt: true,
+                },
+                orderDetails: {
+                    id: true,
+                    price: true
+                }
+            }
         });
         return order;
+    }
+    async deleteOrder(id) {
+        const orderDelete = await this.getOrderById(id);
+        if (!orderDelete) {
+            throw new Error(`La orden con el id ${id} no existe`);
+        }
+        await this.orderDetailRepository.delete({ order: { id } });
+        await this.orderRepository.remove(orderDelete);
     }
 };
 exports.OrderRepository = OrderRepository;

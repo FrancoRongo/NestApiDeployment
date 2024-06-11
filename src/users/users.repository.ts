@@ -65,6 +65,16 @@ export class UsersRepository {
         }else (user.isAdmin=true)
         return this.userRepository.save(user)
     }
+
+    async updateUserToSuperAdmin(id:string): Promise<User>{
+        const user = await this.userRepository.findOne({where:{id}})
+        if(!user){
+            throw new Error ('Usuario no encontrado')
+        }if (user.isSuperAdmin===true){
+            user.isSuperAdmin=false;
+        }else (user.isSuperAdmin=true)
+        return this.userRepository.save(user)
+    }
     
     //Actualiza un usuario (Recibe como parametro ID de usuario a modificar y el campo a modificar)
     async updateUser(id: string, updateUserDto: Partial<User>): Promise<User> {

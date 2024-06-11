@@ -69,6 +69,10 @@ export class UsersService {
         return await this.usersRepository.updateUserToAdmin(id)
     }
 
+    async updateToUserSuperAdmin(id:string){
+        return await this.usersRepository.updateUserToSuperAdmin(id)
+    }
+
     async updateUser(id: string, updateUserDto: Partial<User>) {
         const user = await this.usersRepository.updateUser(id, updateUserDto);
         const { password,isAdmin, ...userWithoutPassword } = user;

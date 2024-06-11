@@ -59,6 +59,9 @@ let UsersService = class UsersService {
     async updateToUserAdmin(id) {
         return await this.usersRepository.updateUserToAdmin(id);
     }
+    async updateToUserSuperAdmin(id) {
+        return await this.usersRepository.updateUserToSuperAdmin(id);
+    }
     async updateUser(id, updateUserDto) {
         const user = await this.usersRepository.updateUser(id, updateUserDto);
         const { password, isAdmin, ...userWithoutPassword } = user;

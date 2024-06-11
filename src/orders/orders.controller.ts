@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, Get, NotFoundException, InternalServerErrorException, Logger, UseGuards } from "@nestjs/common";
+import { Controller, Post, Body, Param, Get, NotFoundException, InternalServerErrorException, Logger, UseGuards, Delete, Query } from "@nestjs/common";
 import { OrdersService } from "./orders.service"
 import { Order } from "./orders.entity";
 import { CreateOrderDto } from "./createOrderDto.Dto";
@@ -7,6 +7,7 @@ import { Roles } from "src/decorators/roles.decorator";
 import { Role } from "src/auth/roles.enum";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { RolesGuard } from "src/auth/roles.guard";
+import { Product } from "src/products/products.entity";
 
 @Controller("orders")
 @ApiTags("Order")
@@ -17,7 +18,7 @@ export class OrdersController {
     @ApiBearerAuth()
     @Post()
     @UseGuards(AuthGuard)
-    async createOrder(@Body() createOrderDto:CreateOrderDto): Promise<Order> {
+    async createOrder(@Body() createOrderDto:CreateOrderDto): Promise<[Order,{ message: string, products: Product[] }]> {
         try {
             return await this.ordersService.addOrder(createOrderDto);
         } catch (error) {
@@ -57,6 +58,19 @@ export class OrdersController {
                 this.logger.error(`Error al obtener la orden con ID '${id}': ${error.message}`);
                 throw new InternalServerErrorException('Error interno al obtener la orden');
             }
+        }
+    }
+
+    @ApiBearerAuth()
+    @Delete(':id')
+    @UseGuards(AuthGuard,RolesGuard)
+    @Roles(Role.Admin,Role.SuperAdmin)
+    async deleteOrder(@Param('id') id: string): Promise<void> {
+        try {
+            await this.ordersService.deleteOrder(id)
+    
+        } catch (error) {
+            throw new InternalServerErrorException('Error interno al eliminar la orden');
         }
     }
 }

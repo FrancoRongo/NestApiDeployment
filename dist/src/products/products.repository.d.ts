@@ -19,5 +19,4 @@ export declare class ProductsRepository {
     updateProduct(id: string, productDto: Partial<Product>): Promise<Product>;
     deleteProduct(id: string): Promise<void>;
     addHardProducts(): Promise<string>;
-    addSupplierToProducts(): Promise<void>;
 }

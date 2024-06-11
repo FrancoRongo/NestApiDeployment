@@ -1,14 +1,24 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, InternalServerErrorException, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, InternalServerErrorException, Param, Post, Put, UseGuards } from "@nestjs/common";
 import { Supplier } from "./supplier.entity";
 import { SupplierServices } from "./supplier.services";
 import { SupplierDto } from "./supplier.dto";
+import { AuthGuard } from "src/auth/auth.guard";
+import { RolesGuard } from "src/auth/roles.guard";
+import { Role } from "src/auth/roles.enum";
+import { Roles } from "src/decorators/roles.decorator";
+import { ApiBearerAuth, ApiBody, ApiTags } from "@nestjs/swagger";
 
 @Controller('supplier')
+@ApiTags('Suppliers')
 export class SupplierController{
     constructor (private readonly supplierServices : SupplierServices){}
-
+    
+    @ApiBearerAuth()
+    @ApiBody({})
     @HttpCode(HttpStatus.OK)
     @Get()
+    @UseGuards(AuthGuard, /*RolesGuard*/)
+    //@Roles(Role.Admin, Role.SuperAdmin)
     async getSuppliers():Promise<Supplier[]>{
         try{
             return this.supplierServices.getSuppliers()
@@ -16,8 +26,13 @@ export class SupplierController{
             throw new InternalServerErrorException('Error interno del servidor al buscar proveedores')
         }
     }
+
+    @ApiBearerAuth()
+    @ApiBody({})
     @HttpCode(HttpStatus.OK)
     @Get(':id')
+    @UseGuards(AuthGuard,/*RolesGuard*/)
+    //@Roles(Role.Admin, Role.SuperAdmin)
     async getSupplierId(@Param('id') id:string): Promise<Supplier>{
         try{
             return await this.supplierServices.getSupplierId(id)
@@ -27,8 +42,12 @@ export class SupplierController{
         }
     }
     
+    @ApiBearerAuth()
+    @ApiBody({})
     @HttpCode(HttpStatus.CREATED)
     @Post()
+    @UseGuards(AuthGuard,/*RolesGuard*/)
+    //@Roles(Role.Admin,Role.SuperAdmin)
     async createSupplier(@Body() supplierDto:SupplierDto): Promise<Supplier>{
         try{
             return await this.supplierServices.createSupplier(supplierDto)
@@ -37,8 +56,12 @@ export class SupplierController{
         }
     }
     
+    @ApiBearerAuth()
+    @ApiBody({})
     @HttpCode(HttpStatus.OK)
     @Put(":id")
+    @UseGuards(AuthGuard,/*RolesGuard*/)
+    //@Roles(Role.Admin,Role.SuperAdmin)
     async updateSupplier(@Param('id') id:string, @Body() supplierDto:Partial<SupplierDto>): Promise<Supplier>{
         try{
             return await this.supplierServices.updateSupplier(id,supplierDto)
@@ -47,8 +70,12 @@ export class SupplierController{
         }
     }
     
+    @ApiBearerAuth()
+    @ApiBody({})
     @HttpCode(HttpStatus.OK)
     @Delete(":id")
+    @UseGuards(AuthGuard,/*RolesGuard*/)
+    //@Roles(Role.Admin,Role.SuperAdmin)
     async deleteSupplier(@Param('id') id:string):Promise<Supplier>{
         try{
             return await this.supplierServices.deteleSupplier(id)

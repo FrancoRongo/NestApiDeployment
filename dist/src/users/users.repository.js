@@ -68,6 +68,18 @@ let UsersRepository = class UsersRepository {
             (user.isAdmin = true);
         return this.userRepository.save(user);
     }
+    async updateUserToSuperAdmin(id) {
+        const user = await this.userRepository.findOne({ where: { id } });
+        if (!user) {
+            throw new Error('Usuario no encontrado');
+        }
+        if (user.isSuperAdmin === true) {
+            user.isSuperAdmin = false;
+        }
+        else
+            (user.isSuperAdmin = true);
+        return this.userRepository.save(user);
+    }
     async updateUser(id, updateUserDto) {
         const user = await this.userRepository.findOne({ where: { id: id } });
         if (!user) {

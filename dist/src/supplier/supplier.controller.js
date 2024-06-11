@@ -16,6 +16,8 @@ exports.SupplierController = void 0;
 const common_1 = require("@nestjs/common");
 const supplier_services_1 = require("./supplier.services");
 const supplier_dto_1 = require("./supplier.dto");
+const auth_guard_1 = require("../auth/auth.guard");
+const swagger_1 = require("@nestjs/swagger");
 let SupplierController = class SupplierController {
     constructor(supplierServices) {
         this.supplierServices = supplierServices;
@@ -63,31 +65,43 @@ let SupplierController = class SupplierController {
 };
 exports.SupplierController = SupplierController;
 __decorate([
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiBody)({}),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, common_1.Get)(),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], SupplierController.prototype, "getSuppliers", null);
 __decorate([
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiBody)({}),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, common_1.Get)(':id'),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], SupplierController.prototype, "getSupplierId", null);
 __decorate([
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiBody)({}),
     (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
     (0, common_1.Post)(),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [supplier_dto_1.SupplierDto]),
     __metadata("design:returntype", Promise)
 ], SupplierController.prototype, "createSupplier", null);
 __decorate([
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiBody)({}),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, common_1.Put)(":id"),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
@@ -95,8 +109,11 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], SupplierController.prototype, "updateSupplier", null);
 __decorate([
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiBody)({}),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, common_1.Delete)(":id"),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -104,6 +121,7 @@ __decorate([
 ], SupplierController.prototype, "deleteSupplier", null);
 exports.SupplierController = SupplierController = __decorate([
     (0, common_1.Controller)('supplier'),
+    (0, swagger_1.ApiTags)('Suppliers'),
     __metadata("design:paramtypes", [supplier_services_1.SupplierServices])
 ], SupplierController);
 //# sourceMappingURL=supplier.controller.js.map

@@ -1,11 +1,13 @@
 import { Repository } from 'typeorm';
 import { Order } from './orders.entity';
-import { Injectable, InternalServerErrorException} from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { OrderDetails } from 'src/orders/orderDetails.entity';
 import { ProductsService } from '../products/products.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateOrderDto } from './createOrderDto.Dto';
+import { error } from 'console';
+import { Product } from 'src/products/products.entity';
 
 @Injectable()
 export class OrderRepository {
@@ -18,7 +20,7 @@ export class OrderRepository {
         private readonly orderDetailRepository: Repository<OrderDetails>
     ) {}
 
-    async addOrder(createOrderDto: CreateOrderDto/*aca pasar el userid */): Promise<Order> {
+    async addOrder(createOrderDto: CreateOrderDto/*aca pasar el userid */): Promise<[Order,{ message: string, products: Product[] }]> {
     // Buscar al usuario por su ID
     const user = await this.usersService.getUserById(createOrderDto.userId);
     if (!user) {
@@ -35,13 +37,14 @@ export class OrderRepository {
     const orderDetails = new OrderDetails();
     orderDetails.price = 0; // Inicializar el precio en 0
     orderDetails.products = [];
+    let productStockNull = [];
 
     // Iterar sobre los productos de la orden
     for (const product of createOrderDto.products) {
         // Buscar el producto por su ID en la base de datos
         const productInDB = await this.productsService.getProductById(product.id);
         if (productInDB && productInDB.stock === 0){
-            console.log(`No hay stock disponible del producto ${product.name}`)
+            productStockNull.push(productInDB)
 
         } else if (productInDB && productInDB.stock > 0) {
             // Restar una unidad del stock del producto utilizando el servicio de productos
@@ -65,8 +68,13 @@ export class OrderRepository {
     // Guardar la orden en la base de datos
     const savedOrder = await this.orderRepository.save(order);
 
+    const productStockNullMessage = {
+        message: "Estos productos se encuentran sin stock",
+        products: productStockNull
+    };
+
     // Devolver la orden creada
-    return savedOrder;
+    return [savedOrder,productStockNullMessage];
 
 
     }
@@ -78,13 +86,47 @@ export class OrderRepository {
         return orders
 
     }
-
+    
     async getOrderById(id: string): Promise<Order> {
+        
         // Buscar la orden por su ID incluyendo las relaciones
         const order: Order = await this.orderRepository.findOne({
             where: { id: id },
             relations: ['user', 'orderDetails'], // Utilizamos el nombre de la relación
+            select:{
+                id:true,
+                date:true,
+                user:{
+                    id:true,
+                    name:true,
+                    email:true,
+                    password:false,
+                    phone:true,
+                    country:true,
+                    address:true,
+                    city:true,
+                    isAdmin:true,
+                    isSuperAdmin:true,
+                    createdAt:true,
+                },
+                orderDetails:{
+                    id:true,
+                    price:true
+                }
+
+            }
           });
+          
         return order;
+    }
+
+    async deleteOrder(id:string): Promise<void>{
+      const orderDelete = await this.getOrderById(id);
+      if(!orderDelete){
+        throw new Error (`La orden con el id ${id} no existe`)
+      }
+      await this.orderDetailRepository.delete({order:{id}})
+      await this.orderRepository.remove(orderDelete)
+      
     }
 }

@@ -118,15 +118,5 @@
         "category": "mouse",
         "supplier": "Supplier C",
         "supplierPrice": 1000
-    },
-    {
-        "name": "Golf",
-        "description": "The best car in the world",
-        "price": 29.99,
-        "stock": 12,
-        "imgUrl": "https://www.phi-digital.com/wp-content/uploads/2021/11/Mouse-PC-SteelSeries-Rival-52.jpg",
-        "category": "Car",
-        "supplier": "Volkswagen",
-        "supplierPrice": 1000
     }
 ]

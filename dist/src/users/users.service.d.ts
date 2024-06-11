@@ -26,6 +26,7 @@ export declare class UsersService {
     getUserByName(name: string): Promise<User>;
     getUserById(id: string): Promise<User>;
     updateToUserAdmin(id: string): Promise<User>;
+    updateToUserSuperAdmin(id: string): Promise<User>;
     updateUser(id: string, updateUserDto: Partial<User>): Promise<{
         id: string;
         name: string;

@@ -19,6 +19,7 @@ export declare class UsersController {
     getUsersByCountry(country: string): Promise<User[]>;
     getUserById(id: string): Promise<User>;
     updateUserToAdmin(id: string, updateUserDto: Partial<User>): Promise<User>;
+    updateUserToSuperAdmin(id: string, updateUserDto: Partial<User>): Promise<User>;
     updateUser(id: string, updateUserDto: Partial<User>): Promise<{
         id: string;
         name: string;

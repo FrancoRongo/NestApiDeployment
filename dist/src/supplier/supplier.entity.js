@@ -10,6 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Supplier = void 0;
+const swagger_1 = require("@nestjs/swagger");
 const products_entity_1 = require("../products/products.entity");
 const typeorm_1 = require("typeorm");
 let Supplier = class Supplier {
@@ -20,19 +21,35 @@ __decorate([
     __metadata("design:type", String)
 ], Supplier.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
+    (0, swagger_1.ApiProperty)({
+        description: "Nombre del Proveedor",
+        example: "Supplier A"
+    }),
+    (0, typeorm_1.Column)({ length: 50, nullable: false }),
     __metadata("design:type", String)
 ], Supplier.prototype, "name", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
+    (0, swagger_1.ApiProperty)({
+        description: "Número de telefono del proveedor",
+        example: 123456789,
+    }),
+    (0, typeorm_1.Column)({ type: "varchar", nullable: false }),
     __metadata("design:type", String)
 ], Supplier.prototype, "phone", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
+    (0, swagger_1.ApiProperty)({
+        description: "Correo electronico unico del proveedor",
+        example: "proveedor@example.com"
+    }),
+    (0, typeorm_1.Column)({ unique: true, length: 50 }),
     __metadata("design:type", String)
 ], Supplier.prototype, "email", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
+    (0, swagger_1.ApiProperty)({
+        description: "Direccion del usuario",
+        example: "123 Main St",
+    }),
+    (0, typeorm_1.Column)({ type: "text", nullable: true }),
     __metadata("design:type", String)
 ], Supplier.prototype, "address", void 0);
 __decorate([

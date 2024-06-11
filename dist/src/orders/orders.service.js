@@ -25,6 +25,9 @@ let OrdersService = class OrdersService {
     async getOrders() {
         return this.ordersRepository.getOrders();
     }
+    async deleteOrder(id) {
+        return this.ordersRepository.deleteOrder(id);
+    }
 };
 exports.OrdersService = OrdersService;
 exports.OrdersService = OrdersService = __decorate([

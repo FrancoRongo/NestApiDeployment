@@ -161,9 +161,7 @@ export class ProductsRepository {
         }
     }
 
-    async addSupplierToProducts(){
 
-    }
 
 
     

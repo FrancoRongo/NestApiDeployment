@@ -1,3 +1,4 @@
+import { ApiProperty } from "@nestjs/swagger";
 import { Product } from "src/products/products.entity";
 import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -5,14 +6,34 @@ import { Column, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn } from "t
 export class Supplier{
     @PrimaryGeneratedColumn('uuid')
     id:string
-    @Column({nullable:true})
+    
+    @ApiProperty({
+        description:"Nombre del Proveedor",
+        example:"Supplier A"
+    })
+    @Column({length:50,nullable:false})
     name:string
-    @Column({nullable:true})
+    
+    @ApiProperty({
+        description:"Número de telefono del proveedor",
+        example: 123456789,
+    })
+    @Column({type:"varchar",nullable:false})
     phone:string
-    @Column({nullable:true})
+    
+    @ApiProperty({
+        description:"Correo electronico unico del proveedor",
+        example:"proveedor@example.com"
+    })
+    @Column({unique:true, length:50})
     email:string
-    @Column({nullable:true})
-    address:string
+    @ApiProperty({
+        description:"Direccion del usuario",
+        example:"123 Main St",
+    })
+    @Column({type:"text", nullable:true})
+    address:string;
+     
     @OneToMany(()=>Product, product => product.supplier)
     @JoinColumn()
     products:Product[]

@@ -42,7 +42,7 @@ export class UsersController {
     @ApiBearerAuth()
     @Get("profile")
     @UseGuards(AuthGuard , RolesGuard)
-    @Roles(Role.Admin)
+    @Roles(Role.Admin, Role.SuperAdmin)
     getUserProfile(@Req() request: Request & {user:any}){
         return "Este enpoint retorne el perfil del usuario"
     }
@@ -86,7 +86,7 @@ export class UsersController {
     }
 
     @ApiBearerAuth()
-    @Put(':id')
+    @Put('/admin/:id')
     @ApiBody({})
     @UseGuards(AuthGuard,RolesGuard)
     @Roles(Role.SuperAdmin)
@@ -104,13 +104,33 @@ export class UsersController {
             
         }
     }
+
+    @ApiBearerAuth()
+    @Put('/superadmin/:id')
+    @ApiBody({})
+    @UseGuards(AuthGuard,RolesGuard)
+    @Roles(Role.SuperAdmin)
+    @HttpCode(HttpStatus.OK)
+    async updateUserToSuperAdmin(@Param('id') id: string, @Body() updateUserDto:Partial<User>){
+        try {
+            const user = await this.usersService.updateToUserSuperAdmin(id);
+            return user;
+        } catch (error) {
+            if (error instanceof NotFoundException){
+                throw new NotFoundException (`Usuario con id ${id} no encontrado`);
+            } else {
+                throw new InternalServerErrorException(`Error interno al modificar el usuario con id ${id}`)
+            }
+            
+        }
+    }
     
     
 
     @ApiBearerAuth()
     @Put(':id')
     @ApiBody({})
-    @UseGuards(AuthGuard , RolesGuard)
+    @UseGuards(AuthGuard , /*RolesGuard*/)
     @Roles(Role.Admin)
     @HttpCode(HttpStatus.OK)
     async updateUser(@Param('id') id: string, @Body() updateUserDto: Partial<User>){

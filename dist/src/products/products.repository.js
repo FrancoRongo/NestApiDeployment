@@ -146,8 +146,6 @@ let ProductsRepository = class ProductsRepository {
             throw error;
         }
     }
-    async addSupplierToProducts() {
-    }
 };
 exports.ProductsRepository = ProductsRepository;
 exports.ProductsRepository = ProductsRepository = __decorate([

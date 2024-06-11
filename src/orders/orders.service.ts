@@ -10,7 +10,7 @@ import { CreateOrderDto } from "./createOrderDto.Dto";
 export class OrdersService {
     constructor(private readonly ordersRepository: OrderRepository) {}
 
-    async addOrder(createOrderDto:CreateOrderDto): Promise<Order> {
+    async addOrder(createOrderDto:CreateOrderDto): Promise<[Order,{ message: string, products: Product[] }]> {
         return this.ordersRepository.addOrder(createOrderDto);
     }
 
@@ -20,5 +20,9 @@ export class OrdersService {
 
     async getOrders():Promise<Order[]>{
         return this.ordersRepository.getOrders();
+    }
+
+    async deleteOrder(id:string): Promise<void>{
+        return this.ordersRepository.deleteOrder(id)
     }
 }

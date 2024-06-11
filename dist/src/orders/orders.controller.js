@@ -63,6 +63,14 @@ let OrdersController = OrdersController_1 = class OrdersController {
             }
         }
     }
+    async deleteOrder(id) {
+        try {
+            await this.ordersService.deleteOrder(id);
+        }
+        catch (error) {
+            throw new common_1.InternalServerErrorException('Error interno al eliminar la orden');
+        }
+    }
 };
 exports.OrdersController = OrdersController;
 __decorate([
@@ -93,6 +101,16 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], OrdersController.prototype, "getOrderById", null);
+__decorate([
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.Delete)(':id'),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(roles_enum_1.Role.Admin, roles_enum_1.Role.SuperAdmin),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], OrdersController.prototype, "deleteOrder", null);
 exports.OrdersController = OrdersController = OrdersController_1 = __decorate([
     (0, common_1.Controller)("orders"),
     (0, swagger_1.ApiTags)("Order"),

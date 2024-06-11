@@ -15,6 +15,7 @@ export declare class UsersRepository {
         createdAt: string;
     }>;
     updateUserToAdmin(id: string): Promise<User>;
+    updateUserToSuperAdmin(id: string): Promise<User>;
     updateUser(id: string, updateUserDto: Partial<User>): Promise<User>;
     deleteUser(id: string): Promise<User>;
     getUserByEmail(email: string): Promise<User>;
