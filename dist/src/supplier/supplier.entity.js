@@ -17,6 +17,10 @@ let Supplier = class Supplier {
 };
 exports.Supplier = Supplier;
 __decorate([
+    (0, swagger_1.ApiProperty)({
+        description: "ID unico del proveedor",
+        example: "e072ae6b-6160-4d27-a25a-55d9618a96d2"
+    }),
     (0, typeorm_1.PrimaryGeneratedColumn)('uuid'),
     __metadata("design:type", String)
 ], Supplier.prototype, "id", void 0);
