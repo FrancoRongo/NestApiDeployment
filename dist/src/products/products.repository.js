@@ -33,7 +33,29 @@ let ProductsRepository = class ProductsRepository {
         this.supplierService = supplierService;
     }
     async getProducts() {
-        return this.productsRepository.find({ relations: ['category', 'supplier'] });
+        return this.productsRepository.find({
+            relations: ['category', 'supplier'],
+            select: {
+                id: true,
+                name: true,
+                description: true,
+                price: true,
+                stock: true,
+                imgUrl: true,
+                supplierPrice: false,
+                category: {
+                    id: true,
+                    name: true,
+                },
+                supplier: {
+                    id: true,
+                    name: true,
+                    phone: true,
+                    email: true,
+                    address: true
+                }
+            }
+        });
     }
     async getStockOfProduct(name) {
         const product = await this.productsRepository.findOne({ where: ({ name }) });

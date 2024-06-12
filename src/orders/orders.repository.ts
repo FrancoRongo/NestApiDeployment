@@ -1,12 +1,11 @@
 import { Repository } from 'typeorm';
 import { Order } from './orders.entity';
-import { BadRequestException, Injectable, InternalServerErrorException} from '@nestjs/common';
+import { Injectable} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { OrderDetails } from 'src/orders/orderDetails.entity';
 import { ProductsService } from '../products/products.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateOrderDto } from './createOrderDto.Dto';
-import { error } from 'console';
 import { Product } from 'src/products/products.entity';
 
 @Injectable()

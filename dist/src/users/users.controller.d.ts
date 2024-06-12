@@ -13,13 +13,10 @@ export declare class UsersController {
         totalPages: number;
         totalCount: number;
     }>;
-    getUserProfile(request: Request & {
-        user: any;
-    }): string;
     getUsersByCountry(country: string): Promise<User[]>;
     getUserById(id: string): Promise<User>;
-    updateUserToAdmin(id: string, updateUserDto: Partial<User>): Promise<User>;
-    updateUserToSuperAdmin(id: string, updateUserDto: Partial<User>): Promise<User>;
+    updateUserToAdmin(id: string): Promise<User>;
+    updateUserToSuperAdmin(id: string): Promise<User>;
     updateUser(id: string, updateUserDto: Partial<User>): Promise<{
         id: string;
         name: string;

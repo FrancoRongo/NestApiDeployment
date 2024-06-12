@@ -5,9 +5,11 @@ const app_module_1 = require("./app.module");
 const logger_middelware_1 = require("./midldleware/logger.middelware");
 const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
+const userRequest_middelware_1 = require("./midldleware/userRequest.middelware");
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.use(logger_middelware_1.loggerGlobal);
+    app.use(userRequest_middelware_1.userRequest);
     app.useGlobalPipes(new common_1.ValidationPipe);
     const swaggerConfig = new swagger_1.DocumentBuilder()
         .setTitle("Demo Nest")

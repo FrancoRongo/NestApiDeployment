@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEmail, IsEmpty, IsInt, IsNotEmpty , IsString, Length, Matches } from "class-validator";
+import { IsDateString, IsEmail, IsEmpty, IsInt, IsNotEmpty , IsOptional, IsString, Length, Matches } from "class-validator";
 
 export class CreateUserDto {
     @IsNotEmpty()
@@ -10,6 +10,7 @@ export class CreateUserDto {
         example:"franco@hotmail.com"
     })
     email: string;
+    
     @IsNotEmpty()
     @IsString()
     @Length(3,80)
@@ -18,6 +19,7 @@ export class CreateUserDto {
         example:"franco"
     })
     name: string;
+    
     @IsNotEmpty()
     @IsString()
     @Matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).{8,15}$/gm, {
@@ -29,23 +31,29 @@ export class CreateUserDto {
         example:"P@ssword123"
     })
     password: string;
+    
     @Length(3,80)
     address: string;
+    
     @IsNotEmpty()
     @IsInt()
     phone: number;
+    
     @IsString()
     @Length(3,20)
     country?: string;
+    
     @IsString()
     @Length(3,20)
     city?: string;
+
     @IsEmpty() 
     @ApiProperty({
         description:"Asignado por default al momento de crear el usuario, no debe ser incluido en el body",
         default: false
     }) 
     isAdmin:boolean;
+    
     @IsEmpty()
     @ApiProperty({
         description: "Asignado por default al momento de crear el usuario, no debe ser incluido en el body",

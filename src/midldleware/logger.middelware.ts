@@ -12,9 +12,9 @@ export class LoggerMiddleware implements NestMiddleware{
         next();
     }
 }
-
 export function loggerGlobal(req:Request, res:Response,  next: NextFunction){
     const timestamp = new Date().toISOString();
     console.log(`[${timestamp}]Estas ejecutando un metodo ${req.method} en la ruta ${req.url}`);
     next();
 }
+

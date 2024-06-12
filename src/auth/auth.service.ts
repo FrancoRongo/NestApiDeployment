@@ -45,7 +45,6 @@ export class AuthService {
         if(!isPasswordValid){
             throw new BadRequestException("Invalid Password")
         }
-        console.log(dbUser.isAdmin , dbUser.isSuperAdmin)
         const userPayload = {
             sub: dbUser.id,
             id: dbUser.id,

@@ -37,7 +37,7 @@ __decorate([
         description: "Número de telefono del proveedor",
         example: 123456789,
     }),
-    (0, typeorm_1.Column)({ type: "varchar", nullable: false }),
+    (0, typeorm_1.Column)({ type: "varchar", nullable: true }),
     __metadata("design:type", String)
 ], Supplier.prototype, "phone", void 0);
 __decorate([
@@ -45,7 +45,7 @@ __decorate([
         description: "Correo electronico unico del proveedor",
         example: "proveedor@example.com"
     }),
-    (0, typeorm_1.Column)({ unique: true, length: 50 }),
+    (0, typeorm_1.Column)({ unique: true, length: 50, nullable: true }),
     __metadata("design:type", String)
 ], Supplier.prototype, "email", void 0);
 __decorate([

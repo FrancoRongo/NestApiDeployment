@@ -14,7 +14,9 @@ export class ProductsController {
     constructor(private readonly productsService: ProductsService) {}
 
     @Get()
-    @HttpCode(HttpStatus.OK)
+    //@UseGuards(AuthGuard,RolesGuard)
+    @HttpCode(HttpStatus.OK)    
+    //@Roles(Role.Admin,Role.SuperAdmin,Role.User)
     async getProducts(): Promise<Product[]> {
         try {
             return await this.productsService.getProducts();
@@ -61,11 +63,12 @@ export class ProductsController {
             }
         }
     }
+    
     @ApiBearerAuth()
     @Post()
     @UseGuards(AuthGuard, RolesGuard) 
     @HttpCode(HttpStatus.CREATED)
-    @Roles(Role.Admin)
+    @Roles(Role.Admin, Role.SuperAdmin)
     async createProduct(@Body() productDto: ProductDto): Promise<Product> {
         try {
             if (!productDto.name || !productDto.description || !productDto.price || !productDto.stock || !productDto.imgUrl) {

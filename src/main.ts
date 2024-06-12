@@ -3,11 +3,14 @@ import { AppModule } from './app.module';
 import { loggerGlobal } from './midldleware/logger.middelware';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { userRequest } from './midldleware/userRequest.middelware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(loggerGlobal)
+  app.use(userRequest)
   app.useGlobalPipes(new ValidationPipe)
+
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle("Demo Nest")

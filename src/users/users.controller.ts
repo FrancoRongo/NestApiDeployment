@@ -1,4 +1,4 @@
-import { UseGuards, Controller, Get,Req,  Body, Param, Put, Delete, HttpStatus, HttpCode, BadRequestException, NotFoundException, InternalServerErrorException, Query, HttpException, UnauthorizedException} from "@nestjs/common";
+import { UseGuards, Controller, Get,Req,  Body, Param, Put, Delete, HttpStatus, HttpCode, BadRequestException, NotFoundException, InternalServerErrorException, Query, HttpException, UnauthorizedException, Post} from "@nestjs/common";
 import { UsersService } from "./users.service";
 import { User } from "./users.entity";
 import { AuthGuard } from "src/auth/auth.guard";
@@ -40,17 +40,9 @@ export class UsersController {
     }
 
     @ApiBearerAuth()
-    @Get("profile")
-    @UseGuards(AuthGuard , RolesGuard)
-    @Roles(Role.Admin, Role.SuperAdmin)
-    getUserProfile(@Req() request: Request & {user:any}){
-        return "Este enpoint retorne el perfil del usuario"
-    }
-
-    @ApiBearerAuth()
     @Get('/country/:country')
     @UseGuards(AuthGuard, RolesGuard)
-    @Roles(Role.Admin)
+    @Roles(Role.Admin,Role.SuperAdmin)
     async getUsersByCountry(@Param('country') country: string): Promise<User[]> {
         try {
             const countryName = country.replace(/-/g, ' ');
@@ -68,7 +60,7 @@ export class UsersController {
     @ApiBearerAuth()
     @Get(':id')
     @UseGuards(AuthGuard , RolesGuard)
-    @Roles(Role.Admin)
+    @Roles(Role.Admin,Role.SuperAdmin)
     async getUserById(@Param('id') id: string){
         try {
             const user = await this.usersService.getUserById(id);
@@ -87,11 +79,10 @@ export class UsersController {
 
     @ApiBearerAuth()
     @Put('/admin/:id')
-    @ApiBody({})
     @UseGuards(AuthGuard,RolesGuard)
     @Roles(Role.SuperAdmin)
     @HttpCode(HttpStatus.OK)
-    async updateUserToAdmin(@Param('id') id: string, @Body() updateUserDto:Partial<User>){
+    async updateUserToAdmin(@Param('id') id: string): Promise<User>{
         try {
             const user = await this.usersService.updateToUserAdmin(id);
             return user;
@@ -107,11 +98,10 @@ export class UsersController {
 
     @ApiBearerAuth()
     @Put('/superadmin/:id')
-    @ApiBody({})
     @UseGuards(AuthGuard,RolesGuard)
     @Roles(Role.SuperAdmin)
     @HttpCode(HttpStatus.OK)
-    async updateUserToSuperAdmin(@Param('id') id: string, @Body() updateUserDto:Partial<User>){
+    async updateUserToSuperAdmin(@Param('id') id: string): Promise<User>{
         try {
             const user = await this.usersService.updateToUserSuperAdmin(id);
             return user;
@@ -130,8 +120,8 @@ export class UsersController {
     @ApiBearerAuth()
     @Put(':id')
     @ApiBody({})
-    @UseGuards(AuthGuard , /*RolesGuard*/)
-    @Roles(Role.Admin)
+    @UseGuards(AuthGuard , RolesGuard)
+    @Roles(Role.Admin,Role.SuperAdmin)
     @HttpCode(HttpStatus.OK)
     async updateUser(@Param('id') id: string, @Body() updateUserDto: Partial<User>){
         try {
@@ -150,7 +140,6 @@ export class UsersController {
     
     @ApiBearerAuth()
     @Delete(':id')
-    @ApiBody({})
     @UseGuards(AuthGuard)
     @HttpCode(HttpStatus.OK)
     

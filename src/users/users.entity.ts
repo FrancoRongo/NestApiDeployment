@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, JoinColumn } from "typeorm";
 import { Order } from "src/orders/orders.entity"; 
 import { ApiProperty } from "@nestjs/swagger";
+import { timeStamp } from "console";
 
 @Entity({ name: "users" })
 export class User {
@@ -82,7 +83,9 @@ export class User {
     })
     @Column({default: false})
     isSuperAdmin: boolean;
+   
 
+    
     /** Fecha de creación del usuario */
     @ApiProperty({
         description: "Fecha de creación del usuario",

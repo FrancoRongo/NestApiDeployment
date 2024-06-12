@@ -14,7 +14,6 @@ export class SupplierController{
     constructor (private readonly supplierServices : SupplierServices){}
     
     @ApiBearerAuth()
-    @ApiBody({})
     @HttpCode(HttpStatus.OK)
     @Get()
     @UseGuards(AuthGuard, /*RolesGuard*/)
@@ -28,7 +27,6 @@ export class SupplierController{
     }
 
     @ApiBearerAuth()
-    @ApiBody({})
     @HttpCode(HttpStatus.OK)
     @Get(':id')
     @UseGuards(AuthGuard,/*RolesGuard*/)
@@ -43,8 +41,8 @@ export class SupplierController{
     }
     
     @ApiBearerAuth()
-    @ApiBody({})
     @HttpCode(HttpStatus.CREATED)
+    @ApiBody({})
     @Post()
     @UseGuards(AuthGuard,/*RolesGuard*/)
     //@Roles(Role.Admin,Role.SuperAdmin)
@@ -57,8 +55,8 @@ export class SupplierController{
     }
     
     @ApiBearerAuth()
-    @ApiBody({})
     @HttpCode(HttpStatus.OK)
+    @ApiBody({})
     @Put(":id")
     @UseGuards(AuthGuard,/*RolesGuard*/)
     //@Roles(Role.Admin,Role.SuperAdmin)
@@ -71,7 +69,6 @@ export class SupplierController{
     }
     
     @ApiBearerAuth()
-    @ApiBody({})
     @HttpCode(HttpStatus.OK)
     @Delete(":id")
     @UseGuards(AuthGuard,/*RolesGuard*/)

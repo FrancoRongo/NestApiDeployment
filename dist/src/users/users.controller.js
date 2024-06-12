@@ -40,9 +40,6 @@ let UsersController = class UsersController {
             throw new common_1.InternalServerErrorException('Error interno al obtener usuarios');
         }
     }
-    getUserProfile(request) {
-        return "Este enpoint retorne el perfil del usuario";
-    }
     async getUsersByCountry(country) {
         try {
             const countryName = country.replace(/-/g, ' ');
@@ -75,7 +72,7 @@ let UsersController = class UsersController {
             }
         }
     }
-    async updateUserToAdmin(id, updateUserDto) {
+    async updateUserToAdmin(id) {
         try {
             const user = await this.usersService.updateToUserAdmin(id);
             return user;
@@ -89,7 +86,7 @@ let UsersController = class UsersController {
             }
         }
     }
-    async updateUserToSuperAdmin(id, updateUserDto) {
+    async updateUserToSuperAdmin(id) {
         try {
             const user = await this.usersService.updateToUserSuperAdmin(id);
             return user;
@@ -174,19 +171,9 @@ __decorate([
 ], UsersController.prototype, "getUsers", null);
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
-    (0, common_1.Get)("profile"),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
-    (0, roles_decorator_1.Roles)(roles_enum_1.Role.Admin, roles_enum_1.Role.SuperAdmin),
-    __param(0, (0, common_1.Req)()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], UsersController.prototype, "getUserProfile", null);
-__decorate([
-    (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Get)('/country/:country'),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
-    (0, roles_decorator_1.Roles)(roles_enum_1.Role.Admin),
+    (0, roles_decorator_1.Roles)(roles_enum_1.Role.Admin, roles_enum_1.Role.SuperAdmin),
     __param(0, (0, common_1.Param)('country')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -196,7 +183,7 @@ __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Get)(':id'),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
-    (0, roles_decorator_1.Roles)(roles_enum_1.Role.Admin),
+    (0, roles_decorator_1.Roles)(roles_enum_1.Role.Admin, roles_enum_1.Role.SuperAdmin),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
@@ -205,35 +192,31 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Put)('/admin/:id'),
-    (0, swagger_1.ApiBody)({}),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(roles_enum_1.Role.SuperAdmin),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "updateUserToAdmin", null);
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Put)('/superadmin/:id'),
-    (0, swagger_1.ApiBody)({}),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
     (0, roles_decorator_1.Roles)(roles_enum_1.Role.SuperAdmin),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     __param(0, (0, common_1.Param)('id')),
-    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "updateUserToSuperAdmin", null);
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Put)(':id'),
     (0, swagger_1.ApiBody)({}),
-    (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
-    (0, roles_decorator_1.Roles)(roles_enum_1.Role.Admin),
+    (0, common_1.UseGuards)(auth_guard_1.AuthGuard, roles_guard_1.RolesGuard),
+    (0, roles_decorator_1.Roles)(roles_enum_1.Role.Admin, roles_enum_1.Role.SuperAdmin),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Body)()),
@@ -244,7 +227,6 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
     (0, common_1.Delete)(':id'),
-    (0, swagger_1.ApiBody)({}),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     __param(0, (0, common_1.Param)('id')),

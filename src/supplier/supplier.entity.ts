@@ -22,14 +22,14 @@ export class Supplier {
         description: "Número de telefono del proveedor",
         example: 123456789,
     })
-    @Column({ type: "varchar", nullable: false })
+    @Column({ type: "varchar", nullable: true })
     phone: string;
     
     @ApiProperty({
         description: "Correo electronico unico del proveedor",
         example: "proveedor@example.com"
     })
-    @Column({ unique: true, length: 50 })
+    @Column({ unique: true, length: 50 , nullable: true})
     email: string;
     
     @ApiProperty({

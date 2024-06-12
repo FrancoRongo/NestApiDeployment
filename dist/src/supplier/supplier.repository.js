@@ -18,9 +18,6 @@ const typeorm_1 = require("@nestjs/typeorm");
 const typeorm_2 = require("typeorm");
 const supplier_entity_1 = require("./supplier.entity");
 let SupplierRepository = class SupplierRepository {
-    findOne() {
-        throw new Error("Method not implemented.");
-    }
     constructor(supplierRepository) {
         this.supplierRepository = supplierRepository;
     }
@@ -53,12 +50,9 @@ let SupplierRepository = class SupplierRepository {
         return supplier;
     }
     async deleteSupplier(id) {
-        if (!id) {
-            throw new common_1.BadRequestException('Se espera un id como respuesta');
-        }
         const supplier = await this.supplierRepository.findOne({ where: { id } });
         if (!supplier) {
-            throw new Error(`No se encuentra el proveedor con el siguiente id:${id}`);
+            throw new common_1.NotFoundException(`Supplier with id ${id} not found`);
         }
         await this.supplierRepository.remove(supplier);
         return supplier;

@@ -66,7 +66,6 @@ let SupplierController = class SupplierController {
 exports.SupplierController = SupplierController;
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
-    (0, swagger_1.ApiBody)({}),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, common_1.Get)(),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
@@ -76,7 +75,6 @@ __decorate([
 ], SupplierController.prototype, "getSuppliers", null);
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
-    (0, swagger_1.ApiBody)({}),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, common_1.Get)(':id'),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
@@ -87,8 +85,8 @@ __decorate([
 ], SupplierController.prototype, "getSupplierId", null);
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
-    (0, swagger_1.ApiBody)({}),
     (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
+    (0, swagger_1.ApiBody)({}),
     (0, common_1.Post)(),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     __param(0, (0, common_1.Body)()),
@@ -98,8 +96,8 @@ __decorate([
 ], SupplierController.prototype, "createSupplier", null);
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
-    (0, swagger_1.ApiBody)({}),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    (0, swagger_1.ApiBody)({}),
     (0, common_1.Put)(":id"),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
     __param(0, (0, common_1.Param)('id')),
@@ -110,7 +108,6 @@ __decorate([
 ], SupplierController.prototype, "updateSupplier", null);
 __decorate([
     (0, swagger_1.ApiBearerAuth)(),
-    (0, swagger_1.ApiBody)({}),
     (0, common_1.HttpCode)(common_1.HttpStatus.OK),
     (0, common_1.Delete)(":id"),
     (0, common_1.UseGuards)(auth_guard_1.AuthGuard),
